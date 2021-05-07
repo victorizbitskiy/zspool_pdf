@@ -41,13 +41,24 @@
      <SPRSL>E</SPRSL>
      <ARBGB>ZSPOOL_PDF</ARBGB>
      <MSGNR>005</MSGNR>
-     <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
+     <TEXT>An error occurred while executing a background job. Job Status: Aborted</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
      <ARBGB>ZSPOOL_PDF</ARBGB>
      <MSGNR>006</MSGNR>
      <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>009</MSGNR>
     </T100>
    </T100>
   </asx:values>

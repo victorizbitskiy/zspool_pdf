@@ -1,20 +1,20 @@
-class ZCL_SPDF_MAP_VALUE definition
-  public
-  final
-  create public .
+CLASS zcl_spdf_map_value DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods CONSTRUCTOR
-    importing
-      !I_VALUE type ANY .
-  methods GET
-    returning
-      value(R_VALUE) type ref to DATA .
-protected section.
-private section.
+    METHODS constructor
+      IMPORTING
+        !ia_value TYPE any .
+    METHODS get
+      RETURNING
+        VALUE(rd_value) TYPE REF TO data .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data M_VALUE type ref to DATA .
+    DATA md_value TYPE REF TO data.
 ENDCLASS.
 
 
@@ -23,16 +23,16 @@ CLASS ZCL_SPDF_MAP_VALUE IMPLEMENTATION.
 
 
   METHOD constructor.
-    FIELD-SYMBOLS: <m_value> TYPE any.
+    FIELD-SYMBOLS: <md_value> TYPE any.
 
-    CREATE DATA m_value LIKE i_value.
-    ASSIGN m_value->* TO <m_value>.
-    <m_value> = i_value.
+    CREATE DATA md_value LIKE ia_value.
+    ASSIGN md_value->* TO <md_value>.
+    <md_value> = ia_value.
 
   ENDMETHOD.
 
 
   METHOD get.
-    r_value = m_value.
+    rd_value = md_value.
   ENDMETHOD.
 ENDCLASS.

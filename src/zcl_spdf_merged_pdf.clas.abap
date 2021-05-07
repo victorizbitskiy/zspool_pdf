@@ -1,38 +1,38 @@
-class ZCL_SPDF_MERGED_PDF definition
-  public
-  final
-  create public .
+CLASS zcl_spdf_merged_pdf DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods CONSTRUCTOR
-    importing
-      !IV_PDF type XSTRING
-      !IV_SIZE type I .
-  methods SAVE_LOCAL
-    importing
-      !IV_FILENAME type STRING
-      !IV_CODEPAGE type ABAP_ENCODING default SPACE .
-  methods SAVE_IN_APPL_SERVER
-    importing
-      !IV_FILENAME type STRING
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_SIZE
-    returning
-      value(RV_SIZE) type I .
-  methods TO_XSTRING
-    returning
-      value(RV_PDF) type XSTRING .
-  methods TO_BINARY
-    returning
-      value(RT_BIN) type SOLIX_TAB .
-  methods SHOW_IN_BROWSER .
-protected section.
-private section.
+    METHODS constructor
+      IMPORTING
+        !iv_pdf  TYPE xstring
+        !iv_size TYPE i .
+    METHODS save_local
+      IMPORTING
+        !iv_filename TYPE string
+        !iv_codepage TYPE abap_encoding DEFAULT space .
+    METHODS save_in_appl_server
+      IMPORTING
+        !iv_filename TYPE string
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_size
+      RETURNING
+        VALUE(rv_size) TYPE i .
+    METHODS to_xstring
+      RETURNING
+        VALUE(rv_pdf) TYPE xstring .
+    METHODS to_binary
+      RETURNING
+        VALUE(rt_bin) TYPE solix_tab .
+    METHODS show_in_browser .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data MV_PDF type XSTRING .
-  data MV_SIZE type I .
+    DATA mv_pdf TYPE xstring .
+    DATA mv_size TYPE i .
 ENDCLASS.
 
 
@@ -40,10 +40,10 @@ ENDCLASS.
 CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
 
-  method CONSTRUCTOR.
+  METHOD constructor.
     mv_pdf = iv_pdf.
     mv_size = iv_size.
-  endmethod.
+  ENDMETHOD.
 
 
   METHOD get_size.
@@ -57,12 +57,12 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
     OPEN DATASET iv_filename FOR OUTPUT IN BINARY MODE.
     IF sy-subrc <> 0.
-      MESSAGE e005(zspool_pdf) WITH iv_filename INTO DATA(lv_message).
+      MESSAGE e006(zspool_pdf) WITH iv_filename INTO DATA(lv_message).
 
       RAISE EXCEPTION TYPE zcx_spdf_exception
         EXPORTING
           textid = VALUE #( msgid = 'ZSPOOL_PDF'
-                            msgno = 005
+                            msgno = 006
                             attr1 = iv_filename ).
 
     ENDIF.
@@ -73,7 +73,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
   ENDMETHOD.
 
 
-  method SAVE_LOCAL.
+  METHOD save_local.
 
     DATA(lt_binary) = to_binary( ).
     DATA(lv_filesize) = get_size( ).
@@ -83,10 +83,10 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
                                                       confirm_overwrite = abap_true
                                                       codepage          = iv_codepage
                                              CHANGING data_tab          = lt_binary ).
-  endmethod.
+  ENDMETHOD.
 
 
-  method SHOW_IN_BROWSER.
+  METHOD show_in_browser.
     DATA: lo_html_container TYPE REF TO cl_gui_custom_container,
           lo_html_control   TYPE REF TO cl_gui_html_viewer,
           lt_data           TYPE STANDARD TABLE OF x255,
@@ -112,19 +112,19 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
                                  CHANGING data_table   = lt_data ).
 
     lo_html_control->show_url_in_browser( url = lv_url ).
-  endmethod.
+  ENDMETHOD.
 
 
-  method TO_BINARY.
+  METHOD to_binary.
     CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
       EXPORTING
         buffer     = mv_pdf
       TABLES
         binary_tab = rt_bin.
-  endmethod.
+  ENDMETHOD.
 
 
-  method TO_XSTRING.
+  METHOD to_xstring.
     rv_pdf = mv_pdf.
-  endmethod.
+  ENDMETHOD.
 ENDCLASS.

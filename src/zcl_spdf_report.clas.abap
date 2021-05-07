@@ -1,79 +1,79 @@
-class ZCL_SPDF_REPORT definition
-  public
-  final
-  create public .
+CLASS zcl_spdf_report DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  constants:
-    BEGIN OF gc_param_kind,
-        p TYPE rsscr_kind VALUE 'P',
-        s TYPE rsscr_kind VALUE 'S',
+    CONSTANTS:
+      BEGIN OF gc_param_kind,
+        params TYPE rsscr_kind VALUE 'P',
+        selopt TYPE rsscr_kind VALUE 'S',
       END OF gc_param_kind .
-  data MV_NAME type PROGNAME .
-  data MV_VARIANT type VARIANT .
+    DATA mv_name TYPE progname .
+    DATA mv_variant TYPE variant .
 
-  methods CONSTRUCTOR
-    importing
-      !IV_NAME type PROGNAME
-      !IV_VARIANT type VARIANT default SPACE
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods ADD_PARAM
-    importing
-      !IV_NAME type CHAR8
-      !I_DATA type ANY .
-  methods SUBMIT_TO_SAP_SPOOL
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_MERGED_PDF
-    returning
-      value(RO_MERGED_PDF) type ref to ZCL_SPDF_MERGED_PDF
-    raising
-      CX_RSPO_SPOOLID_TO_PDF .
-  methods GET_PARTS_PDF
-    returning
-      value(RO_PARTS_PDF) type ref to ZCL_SPDF_PARTS_PDF .
-  methods BP_JOB_DELETE
-    importing
-      !IV_FORCEDMODE type SY-BATCH default SPACE
-      !IV_COMMITMODE type BOOLE_D default 'X'
-    raising
-      ZCX_SPDF_EXCEPTION .
+    METHODS constructor
+      IMPORTING
+        !iv_name    TYPE progname
+        !iv_variant TYPE variant DEFAULT space
+      RAISING
+        zcx_spdf_exception .
+    METHODS add_param
+      IMPORTING
+        !iv_name TYPE char8
+        !i_data  TYPE any .
+    METHODS submit_to_sap_spool
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_merged_pdf
+      RETURNING
+        VALUE(ro_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
+      RAISING
+        cx_rspo_spoolid_to_pdf .
+    METHODS get_parts_pdf
+      RETURNING
+        VALUE(ro_parts_pdf) TYPE REF TO zcl_spdf_parts_pdf .
+    METHODS bp_job_delete
+      IMPORTING
+        !iv_forcedmode TYPE sy-batch DEFAULT space
+        !iv_commitmode TYPE boole_d DEFAULT 'X'
+      RAISING
+        zcx_spdf_exception .
   PROTECTED SECTION.
-private section.
+  PRIVATE SECTION.
 
-  data MT_INITIAL_RSPARAMS type RSPARAMS_TT .
-  data MT_RSPARAMS type RSPARAMS_TT .
-  data MS_JOB_PARAMS type TBTCJOB .
-  data MO_PARAMS_MAP type ref to CL_OBJECT_MAP .
+    DATA mt_initial_rsparams TYPE rsparams_tt .
+    DATA mt_rsparams TYPE rsparams_tt .
+    DATA ms_job_params TYPE tbtcjob .
+    DATA mo_params_map TYPE REF TO cl_object_map .
 
-  methods CHECK_REPORT_EXISTS
-    importing
-      !IV_NAME type PROGNAME
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods CHECK_VARIANT_EXISTS
-    importing
-      !IV_NAME type PROGNAME
-      !IV_VARIANT type VARIANT default SPACE
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods FILL_RSPARAMS .
-  methods SUBMIT_WITH_RSPARAMS
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_SPOOL_ID
-    returning
-      value(RV_SPOOL_ID) type RSPOID .
-  methods READ_SPOOL_ID
-    returning
-      value(RV_SPOOL_ID) type RSPOID .
-  methods READ_PARTS_PDF
-    importing
-      !IV_SPOOL_ID type RSPOID
-    returning
-      value(RT_PDF) type TFPCONTENT .
+    METHODS check_report_exists
+      IMPORTING
+        !iv_name TYPE progname
+      RAISING
+        zcx_spdf_exception .
+    METHODS check_variant_exists
+      IMPORTING
+        !iv_name    TYPE progname
+        !iv_variant TYPE variant DEFAULT space
+      RAISING
+        zcx_spdf_exception .
+    METHODS fill_rsparams .
+    METHODS submit_with_rsparams
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_spool_id
+      RETURNING
+        VALUE(rv_spool_id) TYPE rspoid .
+    METHODS read_spool_id
+      RETURNING
+        VALUE(rv_spool_id) TYPE rspoid .
+    METHODS read_parts_pdf
+      IMPORTING
+        !iv_spool_id  TYPE rspoid
+      RETURNING
+        VALUE(rt_pdf) TYPE tfpcontent .
 ENDCLASS.
 
 
@@ -84,8 +84,8 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
   METHOD add_param.
 
     LOOP AT mt_initial_rsparams TRANSPORTING NO FIELDS WHERE selname = iv_name
-                                                         AND kind = gc_param_kind-p
-                                                          OR kind = gc_param_kind-s.
+                                                         AND kind = gc_param_kind-params
+                                                          OR kind = gc_param_kind-selopt.
       EXIT.
     ENDLOOP.
     IF sy-subrc = 0.
@@ -216,7 +216,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
       CLEAR: l_data, ls_rsparams.
 
       CASE <ls_initial_rsparams>-kind.
-        WHEN gc_param_kind-p.
+        WHEN gc_param_kind-params.
 
           IF mo_params_map->contains_key( <ls_initial_rsparams>-selname ) = abap_true.
 
@@ -231,7 +231,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
           ENDIF.
 
-        WHEN gc_param_kind-s.
+        WHEN gc_param_kind-selopt.
 
           IF mo_params_map->contains_key( <ls_initial_rsparams>-selname ) = abap_true.
 
@@ -299,8 +299,8 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
     CONSTANTS: lc_wait_seconds_max TYPE i VALUE 60,
 
                BEGIN OF lc_job_status,
-                 f TYPE btcpstatus VALUE 'F',
-                 a TYPE btcpstatus VALUE 'A',
+                 finished TYPE btcpstatus VALUE 'F',
+                 aborted  TYPE btcpstatus VALUE 'A',
                END OF lc_job_status.
 
     DATA: lv_wait_seconds_value TYPE i,
@@ -309,7 +309,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
     CLEAR: lv_wait_seconds_value.
 
-    WHILE lv_job_status <> lc_job_status-f AND lv_wait_seconds_value < lc_wait_seconds_max.
+    WHILE lv_job_status <> lc_job_status-finished AND lv_wait_seconds_value < lc_wait_seconds_max.
 
 *   Опрашиваем статус запланированных задач
 
@@ -320,15 +320,15 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
           AND jobcount = ms_job_params-jobcount.
 
       CASE lv_job_status.
-        WHEN lc_job_status-f. " F - Finished
-
+        WHEN lc_job_status-finished.
           rv_spool_id = read_spool_id( ).
+        WHEN lc_job_status-aborted.
+          MESSAGE e005(zspool_pdf) INTO DATA(lv_message).
 
-        WHEN lc_job_status-a.  " A = Aborted
-*          TODO:
-*          WRITE: / 'Ошибка при выполнении фонового задания',
-*                 / 'Статус задания: A = Aborted'.
-*          EXIT.
+          RAISE EXCEPTION TYPE zcx_spdf_exception
+            EXPORTING
+              textid = VALUE #( msgid = 'ZSPOOL_PDF'
+                                msgno = 005 ).
       ENDCASE.
 
       WAIT UP TO lv_wait_delay SECONDS.

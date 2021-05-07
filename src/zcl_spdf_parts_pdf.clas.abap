@@ -1,30 +1,30 @@
-class ZCL_SPDF_PARTS_PDF definition
-  public
-  final
-  create public .
+CLASS zcl_spdf_parts_pdf DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods CONSTRUCTOR
-    importing
-      !IT_PDF type TFPCONTENT .
-  methods SAVE_LOCAL
-    importing
-      !IV_FILENAME type STRING
-      !IV_CODEPAGE type ABAP_ENCODING default SPACE .
-  methods SAVE_IN_APPL_SERVER
-    importing
-      !IV_FILENAME type STRING
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_PARTS
-    returning
-      value(RT_PARTS) type TFPCONTENT .
-protected section.
-PRIVATE SECTION.
+    METHODS constructor
+      IMPORTING
+        !it_pdf TYPE tfpcontent .
+    METHODS save_local
+      IMPORTING
+        !iv_filename TYPE string
+        !iv_codepage TYPE abap_encoding DEFAULT space .
+    METHODS save_in_appl_server
+      IMPORTING
+        !iv_filename TYPE string
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_parts
+      RETURNING
+        VALUE(rt_parts) TYPE tfpcontent .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  DATA mt_pdf TYPE tfpcontent .
-  CONSTANTS gc_pdf_file_extension TYPE c LENGTH 4 VALUE '.pdf' ##NO_TEXT.
+    DATA mt_pdf TYPE tfpcontent .
+    CONSTANTS gc_pdf_file_extension TYPE c LENGTH 4 VALUE '.pdf' ##NO_TEXT.
 ENDCLASS.
 
 
@@ -32,14 +32,14 @@ ENDCLASS.
 CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
 
-  method CONSTRUCTOR.
+  METHOD constructor.
     mt_pdf = it_pdf.
-  endmethod.
+  ENDMETHOD.
 
 
-  method GET_PARTS.
+  METHOD get_parts.
     rt_parts = mt_pdf.
-  endmethod.
+  ENDMETHOD.
 
 
   METHOD save_in_appl_server.
@@ -62,12 +62,12 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
       OPEN DATASET lv_filename FOR OUTPUT IN BINARY MODE.
       IF sy-subrc <> 0.
-        MESSAGE e006(zspool_pdf) WITH iv_filename INTO DATA(lv_message).
+        MESSAGE e007(zspool_pdf) WITH iv_filename INTO DATA(lv_message).
 
         RAISE EXCEPTION TYPE zcx_spdf_exception
           EXPORTING
             textid = VALUE #( msgid = 'ZSPOOL_PDF'
-                              msgno = 006
+                              msgno = 007
                               attr1 = iv_filename ).
       ENDIF.
       LOOP AT lt_binary ASSIGNING FIELD-SYMBOL(<ls_binary>).
