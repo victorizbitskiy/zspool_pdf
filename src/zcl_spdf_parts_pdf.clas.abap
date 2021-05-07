@@ -1,30 +1,31 @@
-CLASS zcl_spdf_parts_pdf DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_SPDF_PARTS_PDF definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    METHODS constructor
-      IMPORTING
-        !it_pdf TYPE tfpcontent .
-    METHODS save_local
-      IMPORTING
-        !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space .
-    METHODS save_in_appl_server
-      IMPORTING
-        !iv_filename TYPE string
-      RAISING
-        zcx_spdf_exception .
-    METHODS get_parts
-      RETURNING
-        VALUE(rt_parts) TYPE tfpcontent .
+  methods CONSTRUCTOR
+    importing
+      !IT_PDF type TFPCONTENT .
+  methods SAVE_LOCAL
+    importing
+      !IV_FILENAME type STRING
+      !IV_CODEPAGE type ABAP_ENCODING default SPACE .
+  methods SAVE_IN_APPL_SERVER
+    importing
+      !IV_FILENAME type STRING
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods GET_PARTS
+    returning
+      value(RT_PARTS) type TFPCONTENT .
   PROTECTED SECTION.
-  PRIVATE SECTION.
+private section.
 
-    DATA mt_pdf TYPE tfpcontent .
-    CONSTANTS gc_pdf_file_extension TYPE c LENGTH 4 VALUE '.pdf' ##NO_TEXT.
+  data MT_PDF type TFPCONTENT .
+  constants:
+    gc_pdf_file_extension TYPE c LENGTH 4 value '.pdf' ##NO_TEXT.
 ENDCLASS.
 
 

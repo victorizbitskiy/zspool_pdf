@@ -1,38 +1,38 @@
-CLASS zcl_spdf_merged_pdf DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_SPDF_MERGED_PDF definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    METHODS constructor
-      IMPORTING
-        !iv_pdf  TYPE xstring
-        !iv_size TYPE i .
-    METHODS save_local
-      IMPORTING
-        !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space .
-    METHODS save_in_appl_server
-      IMPORTING
-        !iv_filename TYPE string
-      RAISING
-        zcx_spdf_exception .
-    METHODS get_size
-      RETURNING
-        VALUE(rv_size) TYPE i .
-    METHODS to_xstring
-      RETURNING
-        VALUE(rv_pdf) TYPE xstring .
-    METHODS to_binary
-      RETURNING
-        VALUE(rt_bin) TYPE solix_tab .
-    METHODS show_in_browser .
+  methods CONSTRUCTOR
+    importing
+      !IV_PDF type XSTRING
+      !IV_SIZE type I .
+  methods SAVE_LOCAL
+    importing
+      !IV_FILENAME type STRING
+      !IV_CODEPAGE type ABAP_ENCODING default SPACE .
+  methods SAVE_IN_APPL_SERVER
+    importing
+      !IV_FILENAME type STRING
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods GET_SIZE
+    returning
+      value(RV_SIZE) type I .
+  methods TO_XSTRING
+    returning
+      value(RV_PDF) type XSTRING .
+  methods TO_BINARY
+    returning
+      value(RT_BIN) type SOLIX_TAB .
+  methods SHOW_IN_BROWSER .
   PROTECTED SECTION.
-  PRIVATE SECTION.
+private section.
 
-    DATA mv_pdf TYPE xstring .
-    DATA mv_size TYPE i .
+  data MV_PDF type XSTRING .
+  data MV_SIZE type I .
 ENDCLASS.
 
 

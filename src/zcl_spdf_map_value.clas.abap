@@ -23,11 +23,11 @@ CLASS ZCL_SPDF_MAP_VALUE IMPLEMENTATION.
 
 
   METHOD constructor.
-    FIELD-SYMBOLS: <md_value> TYPE any.
+    FIELD-SYMBOLS: <ld_value> TYPE any.
 
     CREATE DATA md_value LIKE ia_value.
-    ASSIGN md_value->* TO <md_value>.
-    <md_value> = ia_value.
+    ASSIGN md_value->* TO <ld_value>.
+    <ld_value> = ia_value.
 
   ENDMETHOD.
 
