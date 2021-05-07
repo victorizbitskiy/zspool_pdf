@@ -342,7 +342,10 @@
     "remove_descriptions": {
       "ignoreWorkflow": false,
       "ignoreExceptions": false,
-      "exclude": ["/json/"]
+      "exclude": [
+        "/json/",
+        "zcx_spdf_exception.clas.xml "
+      ]
     },
     "rfc_error_handling": false,
     "sequential_blank": {
