@@ -11,11 +11,6 @@
     <T100>
      <SPRSL>E</SPRSL>
      <ARBGB>ZSPOOL_PDF</ARBGB>
-     <MSGNR>000</MSGNR>
-    </T100>
-    <T100>
-     <SPRSL>E</SPRSL>
-     <ARBGB>ZSPOOL_PDF</ARBGB>
      <MSGNR>001</MSGNR>
      <TEXT>Report &amp;1 does not exist.</TEXT>
     </T100>
@@ -54,11 +49,6 @@
      <ARBGB>ZSPOOL_PDF</ARBGB>
      <MSGNR>007</MSGNR>
      <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
-    </T100>
-    <T100>
-     <SPRSL>E</SPRSL>
-     <ARBGB>ZSPOOL_PDF</ARBGB>
-     <MSGNR>009</MSGNR>
     </T100>
    </T100>
   </asx:values>

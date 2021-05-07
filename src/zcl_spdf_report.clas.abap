@@ -30,10 +30,12 @@ CLASS zcl_spdf_report DEFINITION
       RETURNING
         VALUE(ro_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
       RAISING
-        cx_rspo_spoolid_to_pdf .
+        cx_rspo_spoolid_to_pdf
+        zcx_spdf_exception .
     METHODS get_parts_pdf
       RETURNING
-        VALUE(ro_parts_pdf) TYPE REF TO zcl_spdf_parts_pdf .
+                VALUE(ro_parts_pdf) TYPE REF TO zcl_spdf_parts_pdf
+      RAISING   zcx_spdf_exception .
     METHODS bp_job_delete
       IMPORTING
         !iv_forcedmode TYPE sy-batch DEFAULT space
@@ -65,7 +67,8 @@ CLASS zcl_spdf_report DEFINITION
         zcx_spdf_exception .
     METHODS get_spool_id
       RETURNING
-        VALUE(rv_spool_id) TYPE rspoid .
+                VALUE(rv_spool_id) TYPE rspoid
+      RAISING   zcx_spdf_exception.
     METHODS read_spool_id
       RETURNING
         VALUE(rv_spool_id) TYPE rspoid .
@@ -205,15 +208,15 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
   METHOD fill_rsparams.
     DATA: ls_rsparams LIKE LINE OF mt_rsparams,
           lo_value    TYPE REF TO zcl_spdf_map_value,
-          l_data      TYPE REF TO data.
+          ld_data     TYPE REF TO data.
 
     FIELD-SYMBOLS: <la_data> TYPE any,
                    <lt_data> TYPE ANY TABLE,
                    <ls_data> TYPE any,
-                   <l_val>   TYPE any.
+                   <la_val>  TYPE any.
 
     LOOP AT mt_initial_rsparams ASSIGNING FIELD-SYMBOL(<ls_initial_rsparams>).
-      CLEAR: l_data, ls_rsparams.
+      CLEAR: ld_data, ls_rsparams.
 
       CASE <ls_initial_rsparams>-kind.
         WHEN gc_param_kind-params.
@@ -221,8 +224,8 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
           IF mo_params_map->contains_key( <ls_initial_rsparams>-selname ) = abap_true.
 
             lo_value ?= mo_params_map->get( <ls_initial_rsparams>-selname ).
-            l_data = lo_value->get( ).
-            ASSIGN l_data->* TO <la_data>.
+            ld_data = lo_value->get( ).
+            ASSIGN ld_data->* TO <la_data>.
             ls_rsparams = <ls_initial_rsparams>.
             ls_rsparams-sign = 'I'.
             ls_rsparams-option = 'EQ'.
@@ -236,33 +239,33 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
           IF mo_params_map->contains_key( <ls_initial_rsparams>-selname ) = abap_true.
 
             lo_value ?= mo_params_map->get( <ls_initial_rsparams>-selname ).
-            l_data = lo_value->get( ).
-            ASSIGN l_data->* TO <lt_data>.
+            ld_data = lo_value->get( ).
+            ASSIGN ld_data->* TO <lt_data>.
             ls_rsparams = <ls_initial_rsparams>.
 
             LOOP AT <lt_data> ASSIGNING <ls_data>.
-              UNASSIGN <l_val>.
-              ASSIGN COMPONENT 'SIGN' OF STRUCTURE <ls_data> TO <l_val>.
-              IF <l_val> IS ASSIGNED.
-                ls_rsparams-sign = <l_val>.
+              UNASSIGN <la_val>.
+              ASSIGN COMPONENT 'SIGN' OF STRUCTURE <ls_data> TO <la_val>.
+              IF <la_val> IS ASSIGNED.
+                ls_rsparams-sign = <la_val>.
               ENDIF.
 
-              UNASSIGN <l_val>.
-              ASSIGN COMPONENT 'OPTION' OF STRUCTURE <ls_data> TO <l_val>.
-              IF <l_val> IS ASSIGNED.
-                ls_rsparams-option = <l_val>.
+              UNASSIGN <la_val>.
+              ASSIGN COMPONENT 'OPTION' OF STRUCTURE <ls_data> TO <la_val>.
+              IF <la_val> IS ASSIGNED.
+                ls_rsparams-option = <la_val>.
               ENDIF.
 
-              UNASSIGN <l_val>.
-              ASSIGN COMPONENT 'LOW' OF STRUCTURE <ls_data> TO <l_val>.
-              IF <l_val> IS ASSIGNED.
-                ls_rsparams-low = <l_val>.
+              UNASSIGN <la_val>.
+              ASSIGN COMPONENT 'LOW' OF STRUCTURE <ls_data> TO <la_val>.
+              IF <la_val> IS ASSIGNED.
+                ls_rsparams-low = <la_val>.
               ENDIF.
 
-              UNASSIGN <l_val>.
-              ASSIGN COMPONENT 'HIGH' OF STRUCTURE <ls_data> TO <l_val>.
-              IF <l_val> IS ASSIGNED.
-                ls_rsparams-high = <l_val>.
+              UNASSIGN <la_val>.
+              ASSIGN COMPONENT 'HIGH' OF STRUCTURE <ls_data> TO <la_val>.
+              IF <la_val> IS ASSIGNED.
+                ls_rsparams-high = <la_val>.
               ENDIF.
               APPEND ls_rsparams TO mt_rsparams.
             ENDLOOP.
@@ -311,13 +314,11 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
     WHILE lv_job_status <> lc_job_status-finished AND lv_wait_seconds_value < lc_wait_seconds_max.
 
-*   Опрашиваем статус запланированных задач
-
       SELECT SINGLE status
         FROM tbtco
-        INTO lv_job_status
-        WHERE jobname = ms_job_params-jobname
-          AND jobcount = ms_job_params-jobcount.
+        INTO @lv_job_status
+        WHERE jobname = @ms_job_params-jobname
+          AND jobcount = @ms_job_params-jobcount.
 
       CASE lv_job_status.
         WHEN lc_job_status-finished.
@@ -334,7 +335,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
       WAIT UP TO lv_wait_delay SECONDS.
       lv_wait_seconds_value  = lv_wait_seconds_value  + lv_wait_delay.
 
-    ENDWHILE. " ждем завершения выполнения задачи
+    ENDWHILE.
   ENDMETHOD.
 
 
@@ -394,33 +395,30 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
     DATA: lt_tbtc_spoolid       TYPE STANDARD TABLE OF tbtc_spoolid,
           lt_range_tbtc_spoolid TYPE STANDARD TABLE OF ty_range_tbtc_spoolid,
-          ls_range_tbtc_spoolid LIKE LINE OF lt_range_tbtc_spoolid,
-          lv_rqident            TYPE rspoid.
-
-    FIELD-SYMBOLS: <ls_tbtc_spoolid> LIKE LINE OF lt_tbtc_spoolid.
+          ls_range_tbtc_spoolid LIKE LINE OF lt_range_tbtc_spoolid.
 
     SELECT spoolid
       FROM tbtc_spoolid
-      INTO CORRESPONDING FIELDS OF TABLE lt_tbtc_spoolid
-      WHERE jobname  = ms_job_params-jobname
-        AND jobcount = ms_job_params-jobcount.
+      INTO CORRESPONDING FIELDS OF TABLE @lt_tbtc_spoolid
+      WHERE jobname  = @ms_job_params-jobname
+        AND jobcount = @ms_job_params-jobcount.
 
     IF sy-subrc = 0.
 
       ls_range_tbtc_spoolid-sign = 'I'.
       ls_range_tbtc_spoolid-option = 'EQ'.
 
-      LOOP AT lt_tbtc_spoolid ASSIGNING <ls_tbtc_spoolid>.
+      LOOP AT lt_tbtc_spoolid ASSIGNING FIELD-SYMBOL(<ls_tbtc_spoolid>).
         ls_range_tbtc_spoolid-low = <ls_tbtc_spoolid>-spoolid.
         APPEND ls_range_tbtc_spoolid TO lt_range_tbtc_spoolid.
       ENDLOOP.
 
       SELECT SINGLE rqident
         FROM tsp01
-        INTO lv_rqident
-        WHERE rqdoctype = lc_ads_doctype_adsp
-          AND rqowner = sy-uname
-          AND rqident IN lt_range_tbtc_spoolid.
+        INTO @DATA(lv_rqident)
+        WHERE rqdoctype = @lc_ads_doctype_adsp
+          AND rqowner = @sy-uname
+          AND rqident IN @lt_range_tbtc_spoolid.
 
       IF sy-subrc = 0.
         rv_spool_id = lv_rqident.
