@@ -344,7 +344,7 @@
       "ignoreExceptions": false,
       "exclude": [
         "/json/",
-        "zcx_spdf_exception.clas.xml "
+        "zcx_spdf_exception.clas.abap"
       ]
     },
     "rfc_error_handling": false,
