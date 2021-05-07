@@ -22,7 +22,7 @@ CLASS zcl_spdf_report DEFINITION
     METHODS add_param
       IMPORTING
         !iv_name TYPE char8
-        !i_data  TYPE any .
+        !ia_data  TYPE any .
     METHODS submit_to_sap_spool
       RAISING
         zcx_spdf_exception .
@@ -93,7 +93,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
     ENDLOOP.
     IF sy-subrc = 0.
       mo_params_map->put( key = iv_name
-                          value = NEW zcl_spdf_map_value( i_data ) ).
+                          value = NEW zcl_spdf_map_value( ia_data ) ).
     ENDIF.
 
   ENDMETHOD.
