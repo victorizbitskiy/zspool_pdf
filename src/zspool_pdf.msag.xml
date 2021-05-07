@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZSPOOL_PDF</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>ZSPOOL_PDF</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>000</MSGNR>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Report &amp;1 does not exist.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Variant &amp;1 does not exist for report &amp;2.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>An error occurred while deleting a background job &amp;1 &amp;2.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>An error occurred while starting a background job.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>
