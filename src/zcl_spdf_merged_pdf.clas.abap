@@ -87,18 +87,11 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
 
   METHOD show_in_browser.
-    DATA: lo_html_container TYPE REF TO cl_gui_custom_container,
-          lo_html_control   TYPE REF TO cl_gui_html_viewer,
-          lt_data           TYPE STANDARD TABLE OF x255,
-          lv_url            TYPE char255.
+    DATA: lt_data TYPE STANDARD TABLE OF x255,
+          lv_url  TYPE char255.
 
-    CREATE OBJECT lo_html_container
-      EXPORTING
-        container_name = 'HTML'.
-
-    CREATE OBJECT lo_html_control
-      EXPORTING
-        parent = lo_html_container.
+    DATA(lo_html_container) = NEW cl_gui_custom_container( container_name = 'HTML' ).
+    DATA(lo_html_control) = NEW  cl_gui_html_viewer( parent = lo_html_container ).
 
     CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
       EXPORTING
