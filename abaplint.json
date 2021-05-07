@@ -14,7 +14,7 @@
   ],
   "syntax": {
     "version": "v700",
-    "errorNamespace": "^(Z|Y|LT?CL_|TY_|LIF_|.*CAPI)",
+    "errorNamespace": "^(Z|Y|LT?CL_|TY_|LIF_|.*SPDF)",
     "globalConstants": [
       "abap_func_exporting",
       "abap_func_tables",
