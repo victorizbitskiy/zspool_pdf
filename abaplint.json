@@ -227,11 +227,7 @@
     "global_class": true,
     "identical_form_names": true,
     "if_in_if": true,
-    "implement_methods": {
-      "exclude": [
-        "lcl_app"
-      ]
-    },
+    "implement_methods": false,
     "in_statement_indentation": false,
     "indentation": {
       "ignoreExceptions": true,
