@@ -341,11 +341,8 @@
     "release_idoc": true,
     "remove_descriptions": {
       "ignoreWorkflow": false,
-      "ignoreExceptions": false,
-      "exclude": [
-        "/json/",
-        "zcx_spdf_exception.clas.abap"
-      ]
+      "ignoreExceptions": true,
+      "exclude": ["/json/"]
     },
     "rfc_error_handling": false,
     "sequential_blank": {
