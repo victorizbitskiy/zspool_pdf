@@ -3,7 +3,7 @@
 ![ABAP 7.40+](https://img.shields.io/badge/ABAP-7.40sp08+-brightgreen)
 ![lint](https://github.com/victorizbitskiy/zspool_pdf/actions/workflows/main.yml/badge.svg)
 
-**ATTENTION**: The API is still under development, and subject to change.
+**ATTENTION**: The project is still under development and subject to change.
 
 ## `SAP Spool PDF`
 
