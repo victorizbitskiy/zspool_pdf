@@ -22,20 +22,27 @@ CLASS zcl_spdf_report DEFINITION
     METHODS add_param
       IMPORTING
         !iv_name TYPE char8
-        !ia_data  TYPE any .
+        !ia_data TYPE any .
     METHODS submit_to_sap_spool
       RAISING
         zcx_spdf_exception .
     METHODS get_merged_pdf
+      IMPORTING
+        !iv_rqdoctype        TYPE rspodoctyp DEFAULT 'ADSP'
+        !iv_wait_seconds_max TYPE i DEFAULT 60
       RETURNING
         VALUE(ro_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
       RAISING
         cx_rspo_spoolid_to_pdf
         zcx_spdf_exception .
     METHODS get_parts_pdf
+      IMPORTING
+        !iv_rqdoctype        TYPE rspodoctyp DEFAULT 'ADSP'
+        !iv_wait_seconds_max TYPE i DEFAULT 60
       RETURNING
-                VALUE(ro_parts_pdf) TYPE REF TO zcl_spdf_parts_pdf
-      RAISING   zcx_spdf_exception .
+        VALUE(ro_parts_pdf)  TYPE REF TO zcl_spdf_parts_pdf
+      RAISING
+        zcx_spdf_exception .
     METHODS bp_job_delete
       IMPORTING
         !iv_forcedmode TYPE sy-batch DEFAULT space
@@ -66,10 +73,16 @@ CLASS zcl_spdf_report DEFINITION
       RAISING
         zcx_spdf_exception .
     METHODS get_spool_id
+      IMPORTING
+        !iv_rqdoctype        TYPE rspodoctyp
+        !iv_wait_seconds_max TYPE i OPTIONAL
       RETURNING
-                VALUE(rv_spool_id) TYPE rspoid
-      RAISING   zcx_spdf_exception.
+        VALUE(rv_spool_id)   TYPE rspoid
+      RAISING
+        zcx_spdf_exception .
     METHODS read_spool_id
+      IMPORTING
+        !iv_rqdoctype      TYPE rspodoctyp
       RETURNING
         VALUE(rv_spool_id) TYPE rspoid .
     METHODS read_parts_pdf
@@ -285,7 +298,10 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
     DATA: lv_pdf  TYPE xstring,
           lv_size TYPE i.
 
-    cl_rspo_spoolid_to_pdf=>get_spool_pdf( EXPORTING iv_rqident = get_spool_id( )
+    DATA(lv_spool_id) = get_spool_id( iv_rqdoctype = iv_rqdoctype
+                                      iv_wait_seconds_max = iv_wait_seconds_max ).
+
+    cl_rspo_spoolid_to_pdf=>get_spool_pdf( EXPORTING iv_rqident = lv_spool_id
                                            IMPORTING ev_pdf = lv_pdf
                                                      ev_size = lv_size ).
     ro_merged_pdf = NEW #( iv_pdf  = lv_pdf
@@ -294,14 +310,18 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
 
   METHOD get_parts_pdf.
-    ro_parts_pdf = NEW #( read_parts_pdf( get_spool_id( ) ) ).
+    ro_parts_pdf = NEW #(
+                          read_parts_pdf(
+                                          get_spool_id( iv_rqdoctype = iv_rqdoctype
+                                                        iv_wait_seconds_max = iv_wait_seconds_max
+                                                        )
+                                          )
+                          ).
   ENDMETHOD.
 
 
   METHOD get_spool_id.
-    CONSTANTS: lc_wait_seconds_max TYPE i VALUE 60,
-
-               BEGIN OF lc_job_status,
+    CONSTANTS: BEGIN OF lc_job_status,
                  finished TYPE btcpstatus VALUE 'F',
                  aborted  TYPE btcpstatus VALUE 'A',
                END OF lc_job_status.
@@ -312,7 +332,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
     CLEAR: lv_wait_seconds_value.
 
-    WHILE lv_job_status <> lc_job_status-finished AND lv_wait_seconds_value < lc_wait_seconds_max.
+    WHILE lv_job_status <> lc_job_status-finished AND lv_wait_seconds_value < iv_wait_seconds_max.
 
       SELECT SINGLE status
         FROM tbtco
@@ -322,7 +342,9 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
       CASE lv_job_status.
         WHEN lc_job_status-finished.
-          rv_spool_id = read_spool_id( ).
+
+          rv_spool_id = read_spool_id( iv_rqdoctype ).
+
         WHEN lc_job_status-aborted.
           MESSAGE e005(zspool_pdf) INTO DATA(lv_message).
 
@@ -391,32 +413,20 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
              high   TYPE btclistid,
            END OF ty_range_tbtc_spoolid.
 
-    CONSTANTS: lc_ads_doctype_adsp TYPE adsdoctype VALUE 'ADSP'.
+    DATA: lt_range_tbtc_spoolid TYPE STANDARD TABLE OF ty_range_tbtc_spoolid.
 
-    DATA: lt_tbtc_spoolid       TYPE STANDARD TABLE OF tbtc_spoolid,
-          lt_range_tbtc_spoolid TYPE STANDARD TABLE OF ty_range_tbtc_spoolid,
-          ls_range_tbtc_spoolid LIKE LINE OF lt_range_tbtc_spoolid.
-
-    SELECT spoolid
+    SELECT 'I', 'EQ', spoolid
       FROM tbtc_spoolid
-      INTO CORRESPONDING FIELDS OF TABLE @lt_tbtc_spoolid
+      INTO TABLE @lt_range_tbtc_spoolid
       WHERE jobname  = @ms_job_params-jobname
         AND jobcount = @ms_job_params-jobcount.
 
     IF sy-subrc = 0.
 
-      ls_range_tbtc_spoolid-sign = 'I'.
-      ls_range_tbtc_spoolid-option = 'EQ'.
-
-      LOOP AT lt_tbtc_spoolid ASSIGNING FIELD-SYMBOL(<ls_tbtc_spoolid>).
-        ls_range_tbtc_spoolid-low = <ls_tbtc_spoolid>-spoolid.
-        APPEND ls_range_tbtc_spoolid TO lt_range_tbtc_spoolid.
-      ENDLOOP.
-
       SELECT SINGLE rqident
         FROM tsp01
         INTO @DATA(lv_rqident)
-        WHERE rqdoctype = @lc_ads_doctype_adsp
+        WHERE rqdoctype = @iv_rqdoctype
           AND rqowner = @sy-uname
           AND rqident IN @lt_range_tbtc_spoolid.
 
