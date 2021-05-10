@@ -7,5 +7,5 @@
 
 ## `SAP Spool PDF`
 
-Submitting a report to the spool and receiving pdf.
+Submitting a report to the spool and receiving PDF.
 
