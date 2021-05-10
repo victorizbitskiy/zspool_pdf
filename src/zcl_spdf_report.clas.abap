@@ -310,13 +310,8 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
 
   METHOD get_parts_pdf.
-    ro_parts_pdf = NEW #(
-                          read_parts_pdf(
-                                          get_spool_id( iv_rqdoctype = iv_rqdoctype
-                                                        iv_wait_seconds_max = iv_wait_seconds_max
-                                                        )
-                                          )
-                          ).
+    ro_parts_pdf = NEW #( read_parts_pdf( get_spool_id( iv_rqdoctype = iv_rqdoctype
+                                                        iv_wait_seconds_max = iv_wait_seconds_max ) ) ).
   ENDMETHOD.
 
 
