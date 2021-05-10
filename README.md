@@ -49,8 +49,6 @@ Installation is done with [abapGit](http://www.abapgit.org).
 
         DATA(lo_spdf_merged_pdf) = lo_report->get_merged_pdf( ).
         DATA(lv_pdf) = lo_spdf_merged_pdf->to_xstring( ).
-        lo_spdf_merged_pdf->save_local( 'C:\TEMP\spdf_test.pdf' ).
-        lo_spdf_merged_pdf->show_in_browser( ).
 
       CATCH zcx_spdf_exception
             cx_rspo_spoolid_to_pdf INTO DATA(lx_e).
