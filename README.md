@@ -1,4 +1,4 @@
-<img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/logo/logo.svg" height="100px"/>\
+<img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/logo/logo.svg" height="100px"/>
 
 ![ABAP 7.40+](https://img.shields.io/badge/ABAP-7.00%2B-brightgreen)
 ![lint](https://github.com/victorizbitskiy/zspool_pdf/actions/workflows/main.yml/badge.svg)
