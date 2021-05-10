@@ -53,7 +53,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
   METHOD save_in_appl_server.
 
-    DATA(lt_binary) = me->to_binary( ).
+    DATA(lt_binary) = to_binary( ).
 
     OPEN DATASET iv_filename FOR OUTPUT IN BINARY MODE.
     IF sy-subrc <> 0.
@@ -75,7 +75,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
   METHOD save_local.
 
-    DATA(lt_binary) = me->to_binary( ).
+    DATA(lt_binary) = to_binary( ).
     DATA(lv_filesize) = get_size( ).
     cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize      = lv_filesize
                                                       filename          = iv_filename
@@ -91,7 +91,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
     DATA(lo_html_container) = NEW cl_gui_custom_container( container_name = 'HTML' ).
     DATA(lo_html_control) = NEW  cl_gui_html_viewer( parent = lo_html_container ).
-    DATA(lt_data) = me->to_binary( ).
+    DATA(lt_data) = to_binary( ).
 
     lo_html_control->load_data( EXPORTING type         = 'application'
                                           subtype      = 'pdf'

@@ -6,7 +6,7 @@ CLASS lcl_app IMPLEMENTATION.
 
     TRY.
         DATA(lo_report) = NEW zcl_spdf_report( iv_name    = 'RPCPAYRU_NDFL_PERS'
-                                               iv_variant = 'CUS&SV').
+                                               iv_variant = 'CUS&SV' ).
 
 *        lo_report->add_param( iv_name = 'PNPPERNR' ia_data = so_pernr[] ).
 *        lo_report->add_param( iv_name = 'P_YEAR' ia_data = p_year ).
