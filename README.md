@@ -49,8 +49,13 @@ Installation is done with [abapGit](http://www.abapgit.org).
         lo_report->add_param( iv_name = 'P_YEAR' ia_data = p_year ).
         lo_report->add_param( iv_name = 'P_MON' ia_data = p_mon ).
 
+*       Cases:
+*       1) Getting xstring
         DATA(lv_pdf) = lo_report->submit_to_sap_spool( )->get_merged_pdf( )->to_xstring( ).
+        
+*       2) Save and show
         lo_report->get_merged_pdf( )->save_local( lv_filename )->show( ).
+        
         lo_report->bp_job_delete( ).
 
       CATCH zcx_spdf_exception
