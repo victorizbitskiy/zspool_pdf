@@ -7,7 +7,7 @@ CLASS lcl_app IMPLEMENTATION.
 
     TRY.
         DATA(lo_report) = NEW zcl_spdf_report( iv_name    = 'HRULNDFL'
-                                               iv_variant = 'T1').
+                                               iv_variant = 'T1' ).
 
 *        lo_report->add_param( iv_name = 'PNPPERNR' ia_data = so_pernr[] ).
 *        lo_report->add_param( iv_name = 'P_YEAR' ia_data = p_year ).
