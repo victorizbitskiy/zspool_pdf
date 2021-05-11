@@ -183,7 +183,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
         report_not_existent = 3
         report_not_supplied = 4
         OTHERS              = 5.
-    IF sy-subrc = 0 AND lv_return_code IS INITIAL.
+    IF sy-subrc <> 0 OR lv_return_code IS NOT INITIAL.
       MESSAGE e002(zspool_pdf) WITH iv_variant iv_name INTO DATA(lv_message).
 
       RAISE EXCEPTION TYPE zcx_spdf_exception
