@@ -9,7 +9,7 @@ CLASS zcl_spdf_merged_pdf DEFINITION
     METHODS constructor
       IMPORTING
         !iv_pdf  TYPE xstring
-        !iv_size TYPE i .
+        !iv_size TYPE i OPTIONAL.
     METHODS save_local
       IMPORTING
         !iv_filename TYPE string
@@ -48,7 +48,13 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
   METHOD constructor.
     super->constructor( ).
     mv_pdf = iv_pdf.
-    mv_size = iv_size.
+
+    IF iv_size IS SUPPLIED.
+      mv_size = iv_size.
+    ELSE.
+      mv_size = xstrlen( iv_pdf ).
+    ENDIF.
+
   ENDMETHOD.
 
 
