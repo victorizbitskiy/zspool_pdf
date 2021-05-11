@@ -1,54 +1,56 @@
-CLASS zcl_spdf_report DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_SPDF_REPORT definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    CONSTANTS:
-      BEGIN OF gc_param_kind,
+  constants:
+    BEGIN OF gc_param_kind,
         params TYPE rsscr_kind VALUE 'P',
         selopt TYPE rsscr_kind VALUE 'S',
       END OF gc_param_kind .
-    DATA mv_name TYPE progname .
-    DATA mv_variant TYPE variant .
+  data MV_NAME type PROGNAME .
+  data MV_VARIANT type VARIANT .
 
-    METHODS constructor
-      IMPORTING
-        !iv_name    TYPE progname
-        !iv_variant TYPE variant DEFAULT space
-      RAISING
-        zcx_spdf_exception .
-    METHODS add_param
-      IMPORTING
-        !iv_name TYPE char8
-        !ia_data TYPE any .
-    METHODS submit_to_sap_spool
-      RAISING
-        zcx_spdf_exception .
-    METHODS get_merged_pdf
-      IMPORTING
-        !iv_rqdoctype        TYPE rspodoctyp DEFAULT 'ADSP'
-        !iv_wait_seconds_max TYPE i DEFAULT 60
-      RETURNING
-        VALUE(ro_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
-      RAISING
-        cx_rspo_spoolid_to_pdf
-        zcx_spdf_exception .
-    METHODS get_parts_pdf
-      IMPORTING
-        !iv_rqdoctype        TYPE rspodoctyp DEFAULT 'ADSP'
-        !iv_wait_seconds_max TYPE i DEFAULT 60
-      RETURNING
-        VALUE(ro_parts_pdf)  TYPE REF TO zcl_spdf_parts_pdf
-      RAISING
-        zcx_spdf_exception .
-    METHODS bp_job_delete
-      IMPORTING
-        !iv_forcedmode TYPE sy-batch DEFAULT space
-        !iv_commitmode TYPE boole_d DEFAULT 'X'
-      RAISING
-        zcx_spdf_exception .
+  methods CONSTRUCTOR
+    importing
+      !IV_NAME type PROGNAME
+      !IV_VARIANT type VARIANT default SPACE
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods ADD_PARAM
+    importing
+      !IV_NAME type CHAR8
+      !IA_DATA type ANY .
+  methods SUBMIT_TO_SAP_SPOOL
+    returning
+      value(RO_SPDF_REPORT) type ref to ZCL_SPDF_REPORT
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods GET_MERGED_PDF
+    importing
+      !IV_RQDOCTYPE type RSPODOCTYP default 'ADSP'
+      !IV_WAIT_SECONDS_MAX type I default 60
+    returning
+      value(RO_MERGED_PDF) type ref to ZCL_SPDF_MERGED_PDF
+    raising
+      CX_RSPO_SPOOLID_TO_PDF
+      ZCX_SPDF_EXCEPTION .
+  methods GET_PARTS_PDF
+    importing
+      !IV_RQDOCTYPE type RSPODOCTYP default 'ADSP'
+      !IV_WAIT_SECONDS_MAX type I default 60
+    returning
+      value(RO_PARTS_PDF) type ref to ZCL_SPDF_PARTS_PDF
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods BP_JOB_DELETE
+    importing
+      !IV_FORCEDMODE type SY-BATCH default SPACE
+      !IV_COMMITMODE type BOOLE_D default 'X'
+    raising
+      ZCX_SPDF_EXCEPTION .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -437,6 +439,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
   METHOD submit_to_sap_spool.
     fill_rsparams( ).
     submit_with_rsparams( ).
+    ro_spdf_report = me.
   ENDMETHOD.
 
 

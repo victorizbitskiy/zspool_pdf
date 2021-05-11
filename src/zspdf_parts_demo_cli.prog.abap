@@ -15,9 +15,9 @@ CLASS lcl_app IMPLEMENTATION.
 
         lo_report->submit_to_sap_spool( ).
 **
-        DATA(lo_spdf_parts_pdf) = lo_report->get_parts_pdf( ).
-        lo_spdf_parts_pdf->save_local( lv_filename ).
-        DATA(lt_pdf) = lo_spdf_parts_pdf->get_parts( ).
+       DATA(lt_pdf) = lo_report->get_parts_pdf( )->get_parts( ).
+       lo_report->get_parts_pdf( )->save_local( lv_filename ).
+       lo_report->bp_job_delete( ).
 
       CATCH zcx_spdf_exception INTO DATA(lx_e).
         WRITE lx_e->get_text( ).

@@ -9,11 +9,13 @@ CLASS zcl_spdf_merged_pdf DEFINITION
     METHODS constructor
       IMPORTING
         !iv_pdf  TYPE xstring
-        !iv_size TYPE i OPTIONAL.
+        !iv_size TYPE i OPTIONAL .
     METHODS save_local
       IMPORTING
-        !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space
+        !iv_filename              TYPE string
+        !iv_codepage              TYPE abap_encoding DEFAULT space
+      RETURNING
+        VALUE(ro_spdf_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
       RAISING
         zcx_spdf_exception .
     METHODS save_in_appl_server
@@ -32,7 +34,9 @@ CLASS zcl_spdf_merged_pdf DEFINITION
         VALUE(rt_bin) TYPE solix_tab .
     METHODS show
       IMPORTING
-        !iv_filename TYPE string .
+        !iv_filename TYPE string OPTIONAL
+      RAISING
+        zcx_spdf_exception .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -87,6 +91,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
   METHOD save_local.
 
+    mv_filename = iv_filename.
     check_filename( iv_filename ).
     DATA(lt_binary) = to_binary( ).
     DATA(lv_filesize) = get_size( ).
@@ -103,11 +108,24 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
       EXCEPTIONS
         OTHERS            = 0 ).
 
+    ro_spdf_merged_pdf = me.
+
   ENDMETHOD.
 
 
   METHOD show.
-    cl_gui_frontend_services=>execute( document = iv_filename ).
+
+    IF iv_filename IS SUPPLIED.
+      DATA(lv_filename) = iv_filename.
+    ELSEIF mv_filename IS NOT INITIAL.
+      lv_filename = mv_filename.
+    ELSE.
+      cl_gui_frontend_services=>get_temp_directory( CHANGING temp_dir = lv_filename ).
+      save_local( lv_filename ).
+    ENDIF.
+
+    cl_gui_frontend_services=>execute( document = lv_filename ).
+
   ENDMETHOD.
 
 

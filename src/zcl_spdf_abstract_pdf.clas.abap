@@ -4,26 +4,26 @@ CLASS zcl_spdf_abstract_pdf DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-  PROTECTED SECTION.
+protected section.
 
-    METHODS check_filename
-      IMPORTING
-        !iv_filename TYPE string
-      RAISING
-        zcx_spdf_exception .
-    METHODS check_file_extention_is_pdf
-      IMPORTING
-        !iv_filename TYPE string
-      RAISING
-        zcx_spdf_exception .
-    METHODS check_folder_exist
-      IMPORTING
-        !iv_filename TYPE string
-      RAISING
-        zcx_spdf_exception .
-  PRIVATE SECTION.
+  data MV_FILENAME type STRING .
 
-    DATA mt_pdf TYPE tfpcontent .
+  methods CHECK_FILENAME
+    importing
+      !IV_FILENAME type STRING
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods CHECK_FILE_EXTENTION_IS_PDF
+    importing
+      !IV_FILENAME type STRING
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods CHECK_FOLDER_EXIST
+    importing
+      !IV_FILENAME type STRING
+    raising
+      ZCX_SPDF_EXCEPTION .
+private section.
 ENDCLASS.
 
 
