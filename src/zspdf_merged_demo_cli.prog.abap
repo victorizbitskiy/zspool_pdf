@@ -3,6 +3,7 @@
 *&---------------------------------------------------------------------*
 CLASS lcl_app IMPLEMENTATION.
   METHOD main.
+    DATA(lv_filename) = `C:\TEMP\spdf_test.pdf`.
 
     TRY.
         DATA(lo_report) = NEW zcl_spdf_report( iv_name    = 'RPCPAYRU_NDFL_PERS'
@@ -17,9 +18,9 @@ CLASS lcl_app IMPLEMENTATION.
         DATA(lv_pdf) = lo_spdf_merged_pdf->to_xstring( ).
         DATA(lt_bin) = lo_spdf_merged_pdf->to_binary( ).
 
-        lo_spdf_merged_pdf->save_local( 'C:\TEMP\spdf_test.pdf' ).
+        lo_spdf_merged_pdf->save_local( lv_filename ).
 *        lo_spdf_merged_pdf->save_in_appl_server( '' ).
-        lo_spdf_merged_pdf->show_in_browser( ).
+        lo_spdf_merged_pdf->show( lv_filename ).
 
       CATCH zcx_spdf_exception
             cx_rspo_spoolid_to_pdf INTO DATA(lx_e).

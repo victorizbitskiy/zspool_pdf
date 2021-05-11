@@ -27,7 +27,9 @@ CLASS zcl_spdf_merged_pdf DEFINITION
     METHODS to_binary
       RETURNING
         VALUE(rt_bin) TYPE solix_tab .
-    METHODS show_in_browser .
+    METHODS show
+      IMPORTING
+        !iv_filename TYPE string .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -86,19 +88,8 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD show_in_browser.
-    DATA: lv_url TYPE c LENGTH 255.
-
-    DATA(lo_html_container) = NEW cl_gui_custom_container( container_name = 'HTML' ).
-    DATA(lo_html_control) = NEW  cl_gui_html_viewer( parent = lo_html_container ).
-    DATA(lt_data) = to_binary( ).
-
-    lo_html_control->load_data( EXPORTING type         = 'application'
-                                          subtype      = 'pdf'
-                                IMPORTING assigned_url = lv_url
-                                 CHANGING data_table   = lt_data ).
-
-    lo_html_control->show_url_in_browser( url = lv_url ).
+  METHOD show.
+    cl_gui_frontend_services=>execute( document = iv_filename ).
   ENDMETHOD.
 
 
