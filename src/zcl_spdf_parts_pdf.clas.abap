@@ -1,5 +1,6 @@
 CLASS zcl_spdf_parts_pdf DEFINITION
   PUBLIC
+  INHERITING FROM zcl_spdf_abstract_pdf
   FINAL
   CREATE PUBLIC .
 
@@ -11,7 +12,9 @@ CLASS zcl_spdf_parts_pdf DEFINITION
     METHODS save_local
       IMPORTING
         !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space .
+        !iv_codepage TYPE abap_encoding DEFAULT space
+      RAISING
+        zcx_spdf_exception .
     METHODS save_in_appl_server
       IMPORTING
         !iv_filename TYPE string
@@ -39,6 +42,7 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
     mt_pdf = it_pdf.
   ENDMETHOD.
 
@@ -94,6 +98,9 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
     DATA: lv_partnum TYPE n LENGTH 3,
           lt_binary  TYPE solix_tab.
 
+    check_filename( iv_filename ).
+    DATA(lv_pdf_no_of_parts) = lines( mt_pdf ).
+
     LOOP AT mt_pdf ASSIGNING FIELD-SYMBOL(<ls_pdf>).
       lv_partnum = lv_partnum + 1.
 
@@ -104,15 +111,26 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
           binary_tab = lt_binary.
 
       DATA(lv_filesize) = xstrlen( <ls_pdf> ).
-      DATA(lv_filename_part) = create_filename_part( iv_filename = iv_filename
-                                                     iv_partnum  = lv_partnum ).
 
-      cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize      = lv_filesize
-                                                        filename          = lv_filename_part
-                                                        filetype          = 'BIN'
-                                                        confirm_overwrite = abap_true
-                                                        codepage          = iv_codepage
-                                               CHANGING data_tab          = lt_binary ).
+      IF lv_pdf_no_of_parts = 1.
+        DATA(lv_filename_part) = iv_filename.
+      ELSE.
+        lv_filename_part = create_filename_part( iv_filename = iv_filename
+                                                 iv_partnum  = lv_partnum ).
+      ENDIF.
+
+      cl_gui_frontend_services=>gui_download(
+        EXPORTING
+          bin_filesize      = lv_filesize
+          filename          = lv_filename_part
+          filetype          = 'BIN'
+          confirm_overwrite = abap_true
+          codepage          = iv_codepage
+        CHANGING
+          data_tab          = lt_binary
+        EXCEPTIONS
+          OTHERS            = 0 ).
+
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

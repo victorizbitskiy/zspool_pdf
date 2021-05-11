@@ -1,5 +1,6 @@
 CLASS zcl_spdf_merged_pdf DEFINITION
   PUBLIC
+  INHERITING FROM zcl_spdf_abstract_pdf
   FINAL
   CREATE PUBLIC .
 
@@ -12,7 +13,9 @@ CLASS zcl_spdf_merged_pdf DEFINITION
     METHODS save_local
       IMPORTING
         !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space .
+        !iv_codepage TYPE abap_encoding DEFAULT space
+      RAISING
+        zcx_spdf_exception .
     METHODS save_in_appl_server
       IMPORTING
         !iv_filename TYPE string
@@ -43,6 +46,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
     mv_pdf = iv_pdf.
     mv_size = iv_size.
   ENDMETHOD.
@@ -77,14 +81,22 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
   METHOD save_local.
 
-    DATA(lt_binary) = to_binary( ).
+    check_filename( iv_filename ).
+    DATA(lt_binary) = me->to_binary( ).
     DATA(lv_filesize) = get_size( ).
-    cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize      = lv_filesize
-                                                      filename          = iv_filename
-                                                      filetype          = 'BIN'
-                                                      confirm_overwrite = abap_true
-                                                      codepage          = iv_codepage
-                                             CHANGING data_tab          = lt_binary ).
+
+    cl_gui_frontend_services=>gui_download(
+      EXPORTING
+        bin_filesize      = lv_filesize
+        filename          = iv_filename
+        filetype          = 'BIN'
+        confirm_overwrite = abap_true
+        codepage          = iv_codepage
+      CHANGING
+        data_tab          = lt_binary
+      EXCEPTIONS
+        OTHERS            = 0 ).
+
   ENDMETHOD.
 
 
