@@ -24,8 +24,13 @@ CLASS zcl_spdf_parts_pdf DEFINITION
   PRIVATE SECTION.
 
     DATA mt_pdf TYPE tfpcontent .
-    CONSTANTS:
-      gc_pdf_file_extension TYPE c LENGTH 4 VALUE '.pdf' ##NO_TEXT.
+
+    METHODS create_filename_part
+      IMPORTING
+        !iv_filename            TYPE string
+        !iv_partnum             TYPE numc3
+      RETURNING
+        VALUE(rv_filename_part) TYPE string .
 ENDCLASS.
 
 
@@ -35,6 +40,13 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
   METHOD constructor.
     mt_pdf = it_pdf.
+  ENDMETHOD.
+
+
+  METHOD create_filename_part.
+    rv_filename_part = iv_filename.
+    REPLACE FIRST OCCURRENCE OF `.pdf` IN rv_filename_part WITH |_{ iv_partnum }|.
+    rv_filename_part  = |{ rv_filename_part } `.pdf`|.
   ENDMETHOD.
 
 
@@ -56,12 +68,10 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
         TABLES
           binary_tab = lt_binary.
 
-      DATA(lv_filename) = iv_filename.
+      DATA(lv_filename_part) = create_filename_part( iv_filename = iv_filename
+                                                     iv_partnum  = lv_partnum ).
 
-      REPLACE FIRST OCCURRENCE OF gc_pdf_file_extension IN lv_filename WITH lv_partnum.
-      CONCATENATE lv_filename gc_pdf_file_extension INTO lv_filename.
-
-      OPEN DATASET lv_filename FOR OUTPUT IN BINARY MODE.
+      OPEN DATASET lv_filename_part FOR OUTPUT IN BINARY MODE.
       IF sy-subrc <> 0.
         MESSAGE e007(zspool_pdf) WITH iv_filename INTO DATA(lv_message).
 
@@ -72,7 +82,7 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
                               attr1 = iv_filename ).
       ENDIF.
       LOOP AT lt_binary ASSIGNING FIELD-SYMBOL(<ls_binary>).
-        TRANSFER <ls_binary> TO iv_filename LENGTH 255.
+        TRANSFER <ls_binary> TO lv_filename_part LENGTH 255.
       ENDLOOP.
       CLOSE DATASET iv_filename.
 
@@ -94,13 +104,11 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
           binary_tab = lt_binary.
 
       DATA(lv_filesize) = xstrlen( <ls_pdf> ).
-      DATA(lv_filename) = iv_filename.
-
-      REPLACE FIRST OCCURRENCE OF gc_pdf_file_extension IN lv_filename WITH lv_partnum.
-      CONCATENATE lv_filename gc_pdf_file_extension INTO lv_filename.
+      DATA(lv_filename_part) = create_filename_part( iv_filename = iv_filename
+                                                     iv_partnum  = lv_partnum ).
 
       cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize      = lv_filesize
-                                                        filename          = lv_filename
+                                                        filename          = lv_filename_part
                                                         filetype          = 'BIN'
                                                         confirm_overwrite = abap_true
                                                         codepage          = iv_codepage
