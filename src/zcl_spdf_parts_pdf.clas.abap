@@ -98,7 +98,7 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
     DATA: lv_partnum TYPE n LENGTH 3,
           lt_binary  TYPE solix_tab.
 
-    check_filename( iv_filename ).
+    check_filename( ).
     DATA(lv_pdf_no_of_parts) = lines( mt_pdf ).
 
     LOOP AT mt_pdf ASSIGNING FIELD-SYMBOL(<ls_pdf>).

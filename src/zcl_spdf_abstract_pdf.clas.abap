@@ -87,7 +87,8 @@ CLASS ZCL_SPDF_ABSTRACT_PDF IMPLEMENTATION.
   METHOD get_separator.
     DATA(lv_platform) = cl_gui_frontend_services=>get_platform( ).
 
-    IF lv_platform = cl_gui_frontend_services=>platform_linux OR lv_platform = cl_gui_frontend_services=>platform_macosx.
+    IF lv_platform = cl_gui_frontend_services=>platform_linux
+      OR lv_platform = cl_gui_frontend_services=>platform_macosx.
       rv_separator = `/`.
     ELSEIF lv_platform = cl_gui_frontend_services=>platform_windowsxp.
       rv_separator = `\`.
