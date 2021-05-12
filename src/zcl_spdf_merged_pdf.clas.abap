@@ -92,7 +92,8 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
   METHOD save_local.
 
     mv_filename = iv_filename.
-    check_filename( iv_filename ).
+    check_filename(  ).
+
     DATA(lt_binary) = to_binary( ).
     DATA(lv_filesize) = get_size( ).
 
