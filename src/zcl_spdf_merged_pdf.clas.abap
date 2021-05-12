@@ -115,13 +115,16 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
 
   METHOD show.
+    DATA lv_temp_dir TYPE string.
 
     IF iv_filename IS SUPPLIED.
       DATA(lv_filename) = iv_filename.
     ELSEIF mv_filename IS NOT INITIAL.
       lv_filename = mv_filename.
     ELSE.
-      cl_gui_frontend_services=>get_temp_directory( CHANGING temp_dir = lv_filename ).
+      cl_gui_frontend_services=>get_temp_directory( CHANGING temp_dir = lv_temp_dir ).
+      cl_gui_cfw=>flush( ).
+      lv_filename = |{ lv_temp_dir }{ get_separator( ) }temp.pdf|.
       save_local( lv_filename ).
     ENDIF.
 

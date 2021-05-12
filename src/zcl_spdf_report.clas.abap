@@ -215,7 +215,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
       TABLES
         selection_table = mt_initial_rsparams.
 
-    mo_params_map = NEW #( ).
+    mo_params_map = NEW cl_object_map( ).
 
   ENDMETHOD.
 
@@ -331,7 +331,7 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
 
     WHILE lv_job_status <> lc_job_status-finished AND lv_wait_seconds_value < iv_wait_seconds_max.
 
-      cl_progress_indicator=>progress_indicate( i_text = 'Read the spool ID...'(001)
+      cl_progress_indicator=>progress_indicate( i_text = 'Read the Spool ID...'(001)
                                                 i_output_immediately = abap_true ).
       SELECT SINGLE status
         FROM tbtco

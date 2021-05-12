@@ -11,8 +11,10 @@ CLASS zcl_spdf_parts_pdf DEFINITION
         !it_pdf TYPE tfpcontent .
     METHODS save_local
       IMPORTING
-        !iv_filename TYPE string
-        !iv_codepage TYPE abap_encoding DEFAULT space
+        !iv_common_filename      TYPE string
+        !iv_codepage             TYPE abap_encoding DEFAULT space
+      RETURNING
+        VALUE(ro_spdf_parts_pdf) TYPE REF TO zcl_spdf_parts_pdf
       RAISING
         zcx_spdf_exception .
     METHODS save_in_appl_server
@@ -23,10 +25,15 @@ CLASS zcl_spdf_parts_pdf DEFINITION
     METHODS get_parts
       RETURNING
         VALUE(rt_parts) TYPE tfpcontent .
+    METHODS show
+      IMPORTING
+        !iv_common_filename TYPE string OPTIONAL
+      RAISING
+        zcx_spdf_exception .
   PROTECTED SECTION.
-  PRIVATE SECTION.
 
     DATA mt_pdf TYPE tfpcontent .
+    DATA mo_parts_filename_map TYPE REF TO cl_object_map .
 
     METHODS create_filename_part
       IMPORTING
@@ -34,6 +41,8 @@ CLASS zcl_spdf_parts_pdf DEFINITION
         !iv_partnum             TYPE numc3
       RETURNING
         VALUE(rv_filename_part) TYPE string .
+    METHODS process_show_parts .
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -56,6 +65,25 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
   METHOD get_parts.
     rt_parts = mt_pdf.
+  ENDMETHOD.
+
+
+  METHOD process_show_parts.
+    DATA: lo_value    TYPE REF TO zcl_spdf_map_value,
+          ld_data     TYPE REF TO data,
+          lv_filename TYPE string.
+
+    FIELD-SYMBOLS: <la_data> TYPE any.
+
+    DATA(lo_it) = mo_parts_filename_map->get_values_iterator( ).
+    WHILE lo_it->has_next( ).
+      lo_value ?= lo_it->get_next( ).
+      ld_data = lo_value->get( ).
+      ASSIGN ld_data->* TO <la_data>.
+      lv_filename = <la_data>.
+      cl_gui_frontend_services=>execute( document = lv_filename ).
+    ENDWHILE.
+
   ENDMETHOD.
 
 
@@ -98,8 +126,15 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
     DATA: lv_partnum TYPE n LENGTH 3,
           lt_binary  TYPE solix_tab.
 
+    mv_filename = iv_common_filename.
     check_filename( ).
+
     DATA(lv_pdf_no_of_parts) = lines( mt_pdf ).
+    IF lv_pdf_no_of_parts = 1.
+      DATA(lv_filename_part) = mv_filename.
+    ENDIF.
+
+    mo_parts_filename_map = NEW cl_object_map( ).
 
     LOOP AT mt_pdf ASSIGNING FIELD-SYMBOL(<ls_pdf>).
       lv_partnum = lv_partnum + 1.
@@ -112,10 +147,8 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
 
       DATA(lv_filesize) = xstrlen( <ls_pdf> ).
 
-      IF lv_pdf_no_of_parts = 1.
-        DATA(lv_filename_part) = iv_filename.
-      ELSE.
-        lv_filename_part = create_filename_part( iv_filename = iv_filename
+      IF lv_pdf_no_of_parts > 1.
+        lv_filename_part = create_filename_part( iv_filename = mv_filename
                                                  iv_partnum  = lv_partnum ).
       ENDIF.
 
@@ -129,8 +162,36 @@ CLASS ZCL_SPDF_PARTS_PDF IMPLEMENTATION.
         CHANGING
           data_tab          = lt_binary
         EXCEPTIONS
-          OTHERS            = 0 ).
+          OTHERS            = 99 ).
+      IF sy-subrc = 0.
+        mo_parts_filename_map->put( key = lv_partnum
+                                    value = NEW zcl_spdf_map_value( mv_filename ) ).
+      ENDIF.
 
     ENDLOOP.
+
+    ro_spdf_parts_pdf = me.
+  ENDMETHOD.
+
+
+  METHOD show.
+    DATA lv_temp_dir TYPE string.
+
+    IF iv_common_filename IS SUPPLIED.
+      DATA(lv_filename) = iv_common_filename.
+      cl_gui_frontend_services=>execute( document = lv_filename ).
+    ELSEIF mv_filename IS NOT INITIAL.
+      lv_filename = mv_filename.
+      cl_gui_frontend_services=>execute( document = lv_filename ).
+    ELSE.
+      cl_gui_frontend_services=>get_temp_directory( CHANGING temp_dir = lv_temp_dir ).
+      cl_gui_cfw=>flush( ).
+      lv_filename = |{ lv_temp_dir }{ get_separator( ) }temp.pdf|.
+      save_local( lv_filename ).
+
+      process_show_parts( ).
+
+    ENDIF.
+
   ENDMETHOD.
 ENDCLASS.
