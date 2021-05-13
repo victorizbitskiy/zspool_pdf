@@ -37,7 +37,7 @@ Installation is done with [abapGit](http://www.abapgit.org).
 
 <details open>
 <base target="_blank">
-<summary>Show code...</summary>
+<summary>Example</summary>
    
 ```abap
     DATA(lv_filename) = `C:\TEMP\spdf_merged_test.pdf`.
