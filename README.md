@@ -22,7 +22,7 @@ Submitting a report to the spool and receiving PDF.
 
 ## What is this for?
 
-It is often necessary to get a PDF in xstring or binary format. To do this, you can send a report from your z-report to the sap-spool (in the background), and then read PDF by the spool ID.  
+It is often necessary to get a PDF in xstring or binary format. To do this, you can send a report to the sap-spool (in the background), and then read PDF by the spool ID.  
 
 The **cl_bp_abap_job** class exists in ABAP to run reports in the background. But this class only supports passing report parameters via variant (let me know if I'm wrong).
 This is not always convenient, since a variant must either be created before the report is run, or it must be created at runtime.  
