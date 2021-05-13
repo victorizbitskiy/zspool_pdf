@@ -70,4 +70,7 @@ Installation is done with [abapGit](http://www.abapgit.org).
 </details>
 
 ## Diagrams
-
+<details open>
+  <summary>UML Class Diagram</summary>
+   <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/victorizbitskiy/zspool_pdf/blob/main/docs/img/Class%20Diagram.svg"><img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/docs/img/Class%20Diagram.svg" alt="UML Class Diagram" style="max-width:100%;"></a></p>
+</details>
