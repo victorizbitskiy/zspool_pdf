@@ -40,7 +40,7 @@
 
 <details open>
 <base target="_blank">
-<summary>Показать пример...</summary>
+<summary>Пример</summary>
    
 ```abap
     DATA(lv_filename) = `C:\TEMP\spdf_merged_test.pdf`.
