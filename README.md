@@ -1,5 +1,6 @@
 <img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/logo/logo.svg" height="100px"/>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/victorizbitskiy/zspool_pdf/blob/main/LICENSE)
 ![ABAP 7.40+](https://img.shields.io/badge/ABAP-7.40sp08+-brightgreen)
 ![lint](https://github.com/victorizbitskiy/zspool_pdf/actions/workflows/main.yml/badge.svg)
 
