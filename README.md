@@ -15,6 +15,7 @@ Submitting a report to the spool and receiving PDF.
 2. [What is this for?](#what-is-this-for)
 3. [Installation](#installation)
 4. [Using](#using)
+5. [Diagrams](#diagrams)
 
 ## What it is?
 
@@ -68,4 +69,5 @@ Installation is done with [abapGit](http://www.abapgit.org).
 ```
 </details>
 
+## Diagrams
 
