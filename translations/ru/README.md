@@ -38,9 +38,9 @@
 
 ## Использование
 
-<details>
+<details open>
 <base target="_blank">
-<summary>Show code...</summary>
+<summary>Показать пример...</summary>
    
 ```abap
     DATA(lv_filename) = `C:\TEMP\spdf_merged_test.pdf`.
