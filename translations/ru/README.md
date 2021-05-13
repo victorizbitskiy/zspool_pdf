@@ -15,6 +15,7 @@
 2. [Зачем это нужно?](#зачем-это-нужно)
 3. [Установка](#установка)
 4. [Использование](#использование)
+5. [Диаграммы](#диаграммы)
 
 ## Что это такое?
 
@@ -71,3 +72,8 @@
 ```
 </details>
 
+## Диаграммы
+<details open>
+  <summary>UML Class Diagram</summary>
+   <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/victorizbitskiy/zspool_pdf/blob/main/docs/img/Class%20Diagram.svg"><img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/docs/img/Class%20Diagram.svg" alt="UML Class Diagram" style="max-width:100%;"></a></p>
+</details>
