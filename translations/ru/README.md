@@ -7,7 +7,7 @@
 **ВНИМАНИЕ**: Проект все еще разрабатывается и может изменяться
 
 Переводы:
-- [:en: На английском языке](https://github.com/victorizbitskiy/zspool_pdf) 
+- [:uk: In English](https://github.com/victorizbitskiy/zspool_pdf) 
 
 ## `SAP Spool PDF`
 
