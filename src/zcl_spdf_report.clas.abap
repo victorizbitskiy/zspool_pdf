@@ -463,7 +463,6 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
     IF sy-subrc = 0.
       CALL FUNCTION 'GET_PRINT_PARAMETERS'
         EXPORTING
-          destination            = 'PDF_'
           immediately            = abap_true
           no_dialog              = abap_true
         IMPORTING
