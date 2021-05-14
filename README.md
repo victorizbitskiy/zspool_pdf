@@ -7,7 +7,7 @@
 **ATTENTION**: The project is still under development and subject to change.
 
 Translations:
-- [:ru: На русском языке](https://github.com/victorizbitskiy/zspool_pdf/tree/main/translations/ru/README.md) 
+- [:ru: На русском языке](https://github.com/victorizbitskiy/zspool_pdf/tree/main/translations/ru) 
 
 ## `SAP Spool PDF`
 
