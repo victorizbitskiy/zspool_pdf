@@ -3,7 +3,7 @@
 *&---------------------------------------------------------------------*
 CLASS lcl_app IMPLEMENTATION.
   METHOD main.
-    TYPES: ty_pernr TYPE n LENGTH 8.
+    TYPES ty_pernr TYPE n LENGTH 8.
     DATA lt_pernr TYPE RANGE OF ty_pernr.
 
 *   This is an example of generating a 2-NDFL certificate (HCM module).
