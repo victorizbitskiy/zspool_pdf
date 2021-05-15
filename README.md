@@ -43,7 +43,7 @@ Installation is done with [abapGit](http://www.abapgit.org).
 <summary>Example</summary>
    
 ```abap
-   TYPES: ty_pernr TYPE n LENGTH 8.
+   TYPES ty_pernr TYPE n LENGTH 8.
     DATA lt_pernr TYPE RANGE OF ty_pernr.
 
 *   This is an example of generating a 2-NDFL certificate (HCM module).
