@@ -46,7 +46,7 @@
 <summary>Пример</summary>
    
 ```abap
-   TYPES: ty_pernr TYPE n LENGTH 8.
+   TYPES ty_pernr TYPE n LENGTH 8.
     DATA lt_pernr TYPE RANGE OF ty_pernr.
 
 *   Пример генерации справки 2-НДФЛ (HCM модуль).
