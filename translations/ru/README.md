@@ -78,9 +78,7 @@
 
       CATCH zcx_spdf_exception
             cx_rspo_spoolid_to_pdf INTO DATA(lx_e).
-
         WRITE lx_e->get_text( ).
-        RETURN.
     ENDTRY.
 ```
 </details>
