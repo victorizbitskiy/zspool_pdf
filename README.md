@@ -1,4 +1,4 @@
-<img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/logo/logo_new.svg" height="100px"/>
+<img src="https://github.com/victorizbitskiy/zspool_pdf/blob/main/logo/logo_new.svg" height="100px"/>\
 <a href="https://www.flaticon.com/ru/authors/pixel-buddha">Designed by pixel-buddha</a>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/victorizbitskiy/zspool_pdf/blob/main/LICENSE)
