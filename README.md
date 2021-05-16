@@ -30,7 +30,10 @@ It is often necessary to get a PDF in *xstring* or *binary* format. To do this, 
 The **cl_bp_abap_job** class exists in ABAP to run reports in the background. But this class only supports passing report parameters via variant (let me know if I'm wrong).
 This is not always convenient, since a variant must either be created before the report is run, or it must be created at runtime.  
 
-`SAP Spool PDF` allows you to run any report generating PDF in the background. Report parameters can be passed directly and/or via a variant.
+`SAP Spool PDF` allows you to run any report generating PDF in the background. Report parameters can be passed directly and/or via a variant.  
+
+The laconic API allows you to literally get a file in the form of *xstring* or *binary* in one line, save or open it.
+If PDF is generated as separate sheets, then they can be automatically merged.
 
 ## Installation
 
