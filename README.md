@@ -2,7 +2,8 @@
 <a href="https://www.flaticon.com/ru/authors/pixel-buddha">Designed by pixel-buddha</a>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/victorizbitskiy/zspool_pdf/blob/main/LICENSE)
-![ABAP 7.40+](https://img.shields.io/badge/ABAP-7.40sp08+-brightgreen)
+![ABAP 7.40sp08+](https://img.shields.io/badge/ABAP-7.40sp08+-brightgreen)
+[![Code Statistics](https://img.shields.io/badge/CodeStatistics-abaplint-blue)](https://abaplint.app/stats/victorizbitskiy/zspool_pdf)
 
 **ATTENTION**: The project is still under development and subject to change.
 
