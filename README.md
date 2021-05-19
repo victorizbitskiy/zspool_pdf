@@ -34,8 +34,7 @@ This is not always convenient, since a variant must either be created before the
 
 `SAP Spool PDF` allows you to run any report generating PDF in the background. Report parameters can be passed directly and/or via a variant.  
 
-The laconic API allows you to literally get a file in the form of *xstring* or *binary* in one line, save or open it.
-If PDF is generated as separate sheets, then they can be automatically merged.
+The laconic API allows you to literally get a file in the form of *xstring* in one line, save, show, or send it.
 
 ## Installation
 
