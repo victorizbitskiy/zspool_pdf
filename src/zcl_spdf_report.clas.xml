@@ -19,14 +19,6 @@
      <LENGTH>74</LENGTH>
     </item>
    </TPOOL>
-   <DESCRIPTIONS>
-    <SEOCOMPOTX>
-     <CLSNAME>ZCL_SPDF_REPORT</CLSNAME>
-     <CMPNAME>MO_MERGED_PDF</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>ZCL_SPDF_MERGED_PDF</DESCRIPT>
-    </SEOCOMPOTX>
-   </DESCRIPTIONS>
   </asx:values>
  </asx:abap>
 </abapGit>

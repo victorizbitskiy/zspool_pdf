@@ -119,7 +119,7 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
 
   METHOD constructor.
-    super->constructor( ).
+
     mv_pdf = iv_pdf.
 
     IF iv_size IS SUPPLIED.

@@ -44,47 +44,42 @@ CLASS zcl_spdf_report DEFINITION
       RAISING
         zcx_spdf_exception .
   PROTECTED SECTION.
-  PRIVATE SECTION.
+private section.
 
-    DATA mt_initial_rsparams TYPE rsparams_tt .
-    DATA mt_rsparams TYPE rsparams_tt .
-    DATA ms_job_params TYPE tbtcjob .
-    DATA mo_params_map TYPE REF TO cl_object_map .
-    DATA mo_merged_pdf TYPE REF TO zcl_spdf_merged_pdf .
+  data MT_INITIAL_RSPARAMS type RSPARAMS_TT .
+  data MT_RSPARAMS type RSPARAMS_TT .
+  data MS_JOB_PARAMS type TBTCJOB .
+  data MO_PARAMS_MAP type ref to CL_OBJECT_MAP .
+  data MO_MERGED_PDF type ref to ZCL_SPDF_MERGED_PDF .
 
-    METHODS check_report_exists
-      IMPORTING
-        !iv_name TYPE progname
-      RAISING
-        zcx_spdf_exception .
-    METHODS check_variant_exists
-      IMPORTING
-        !iv_name    TYPE progname
-        !iv_variant TYPE variant DEFAULT space
-      RAISING
-        zcx_spdf_exception .
-    METHODS fill_rsparams .
-    METHODS submit_with_rsparams
-      RAISING
-        zcx_spdf_exception .
-    METHODS get_spool_id
-      IMPORTING
-        !iv_rqdoctype        TYPE rspodoctyp
-        !iv_wait_seconds_max TYPE i OPTIONAL
-      RETURNING
-        VALUE(rv_spool_id)   TYPE rspoid
-      RAISING
-        zcx_spdf_exception .
-    METHODS read_spool_id
-      IMPORTING
-        !iv_rqdoctype      TYPE rspodoctyp
-      RETURNING
-        VALUE(rv_spool_id) TYPE rspoid .
-    METHODS read_parts_pdf
-      IMPORTING
-        !iv_spool_id  TYPE rspoid
-      RETURNING
-        VALUE(rt_pdf) TYPE tfpcontent .
+  methods CHECK_REPORT_EXISTS
+    importing
+      !IV_NAME type PROGNAME
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods CHECK_VARIANT_EXISTS
+    importing
+      !IV_NAME type PROGNAME
+      !IV_VARIANT type VARIANT default SPACE
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods FILL_RSPARAMS .
+  methods SUBMIT_WITH_RSPARAMS
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods GET_SPOOL_ID
+    importing
+      !IV_RQDOCTYPE type RSPODOCTYP
+      !IV_WAIT_SECONDS_MAX type I optional
+    returning
+      value(RV_SPOOL_ID) type RSPOID
+    raising
+      ZCX_SPDF_EXCEPTION .
+  methods READ_SPOOL_ID
+    importing
+      !IV_RQDOCTYPE type RSPODOCTYP
+    returning
+      value(RV_SPOOL_ID) type RSPOID .
 ENDCLASS.
 
 
@@ -349,50 +344,6 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
       lv_wait_seconds_value  = lv_wait_seconds_value  + lv_wait_delay.
 
     ENDWHILE.
-  ENDMETHOD.
-
-
-  METHOD read_parts_pdf.
-    DATA: lv_number_of_parts TYPE i,
-          lv_partnum         TYPE adsnum,
-          lv_pdf             TYPE fpcontent.
-
-    CALL FUNCTION 'ADS_GET_NO_OF_PARTS'
-      EXPORTING
-        rqident         = iv_spool_id
-      IMPORTING
-        number_of_parts = lv_number_of_parts
-      EXCEPTIONS
-        no_such_job     = 1
-        wrong_jobtype   = 2
-        internal_error  = 3
-        OTHERS          = 4.
-    IF sy-subrc = 0.
-
-      DO lv_number_of_parts TIMES.
-
-        lv_partnum = lv_partnum + 1.
-
-        CLEAR lv_pdf.
-        CALL FUNCTION 'FPCOMP_CREATE_PDF_FROM_SPOOL'
-          EXPORTING
-            i_spoolid      = iv_spool_id
-            i_partnum      = lv_partnum
-          IMPORTING
-            e_pdf          = lv_pdf
-*           e_renderpagecount =
-*           e_pdf_file     =
-          EXCEPTIONS
-            ads_error      = 1
-            usage_error    = 2
-            system_error   = 3
-            internal_error = 4
-            OTHERS         = 5.
-        IF sy-subrc = 0.
-          APPEND lv_pdf TO rt_pdf.
-        ENDIF.
-      ENDDO.
-    ENDIF.
   ENDMETHOD.
 
 
