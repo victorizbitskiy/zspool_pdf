@@ -1,6 +1,5 @@
 CLASS zcl_spdf_merged_pdf DEFINITION
   PUBLIC
-  INHERITING FROM zcl_spdf_abstract_pdf
   FINAL
   CREATE PUBLIC .
 
@@ -37,16 +36,86 @@ CLASS zcl_spdf_merged_pdf DEFINITION
         !iv_filename TYPE string OPTIONAL
       RAISING
         zcx_spdf_exception .
+    METHODS send
+      IMPORTING
+        !iv_email          TYPE ad_smtpadr
+        !iv_filename       TYPE string
+        !iv_subject        TYPE so_obj_des
+      RETURNING
+        VALUE(ro_spdf_pdf) TYPE REF TO zcl_spdf_merged_pdf
+      RAISING
+        zcx_spdf_exception .
   PROTECTED SECTION.
+    METHODS check_filename
+      RAISING
+        zcx_spdf_exception .
+    METHODS check_file_extention_is_pdf
+      RAISING
+        zcx_spdf_exception .
+    METHODS check_folder_exist
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_separator
+      RETURNING
+        VALUE(rv_separator) TYPE string .
+    METHODS get_folder
+      RETURNING
+        VALUE(rv_folder) TYPE string .
+    METHODS get_short_filename
+      RETURNING
+        VALUE(rv_short_filename) TYPE string .
   PRIVATE SECTION.
 
     DATA mv_pdf TYPE xstring .
+    DATA mv_filename TYPE string .
     DATA mv_size TYPE i .
 ENDCLASS.
 
 
 
 CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
+
+
+  METHOD check_filename.
+
+    check_file_extention_is_pdf( ).
+    check_folder_exist( ).
+
+  ENDMETHOD.
+
+
+  METHOD check_file_extention_is_pdf.
+
+    DATA(lv_filename_length) = strlen( mv_filename ).
+    DATA(lv_ext_pos_start) = lv_filename_length - 4.
+
+    IF mv_filename+lv_ext_pos_start(4) <> '.pdf'.
+      MESSAGE e008(zspool_pdf) INTO DATA(lv_message).
+
+      RAISE EXCEPTION TYPE zcx_spdf_exception
+        EXPORTING
+          textid = VALUE #( msgid = 'ZSPOOL_PDF'
+                            msgno = 008 ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD check_folder_exist.
+
+    DATA(lv_folder) = get_folder( ).
+
+    IF cl_gui_frontend_services=>directory_exist( lv_folder ) = abap_false.
+      MESSAGE e009(zspool_pdf) INTO DATA(lv_message) WITH lv_folder.
+
+      RAISE EXCEPTION TYPE zcx_spdf_exception
+        EXPORTING
+          textid = VALUE #( msgid = 'ZSPOOL_PDF'
+                            msgno = 009
+                            attr1 = lv_folder ).
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD constructor.
@@ -58,6 +127,42 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
     ELSE.
       mv_size = xstrlen( iv_pdf ).
     ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD get_folder.
+
+    DATA(lv_separator) = get_separator( ).
+
+    SPLIT mv_filename AT lv_separator INTO TABLE DATA(lt_filename).
+    DELETE lt_filename INDEX lines( lt_filename ).
+
+    LOOP AT lt_filename ASSIGNING FIELD-SYMBOL(<ls_filename>).
+      rv_folder = |{ rv_folder }{ <ls_filename> }\\|.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD get_separator.
+    DATA(lv_platform) = cl_gui_frontend_services=>get_platform( ).
+
+    IF lv_platform = cl_gui_frontend_services=>platform_linux
+      OR lv_platform = cl_gui_frontend_services=>platform_macosx.
+      rv_separator = `/`.
+    ELSEIF lv_platform = cl_gui_frontend_services=>platform_windowsxp.
+      rv_separator = `\`.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD get_short_filename.
+
+    DATA(lv_separator) = get_separator( ).
+    SPLIT mv_filename AT lv_separator INTO TABLE DATA(lt_filename).
+    rv_short_filename = lt_filename[ lines( lt_filename ) ].
 
   ENDMETHOD.
 
@@ -111,6 +216,54 @@ CLASS ZCL_SPDF_MERGED_PDF IMPLEMENTATION.
 
     ro_spdf_merged_pdf = me.
 
+  ENDMETHOD.
+
+
+  METHOD send.
+    DATA lt_binary  TYPE solix_tab.
+
+    mv_filename = iv_filename.
+    check_filename( ).
+
+    TRY.
+        DATA(lo_sender) = cl_sapuser_bcs=>create( sy-uname ).
+        DATA(lo_email_body) = cl_document_bcs=>create_document( i_type = 'HTM'
+                                                                i_subject = iv_subject ).
+        CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
+          EXPORTING
+            buffer     = mv_pdf
+          TABLES
+            binary_tab = lt_binary.
+
+        lo_email_body->add_attachment( i_attachment_type = 'PDF'
+                                       i_attachment_subject = CONV sood-objdes( get_short_filename( ) )
+                                       i_attachment_size = CONV so_obj_len( mv_size )
+                                       i_att_content_hex = lt_binary ).
+
+        DATA(lo_email) = cl_bcs=>create_persistent( ).
+        lo_email->set_document( lo_email_body ).
+        lo_email->set_sender( lo_sender ).
+        DATA(lo_receiver) = cl_cam_address_bcs=>create_internet_address( iv_email ).
+        lo_email->add_recipient( i_recipient = lo_receiver ).
+
+        DATA(lv_ok) = lo_email->send( ).
+
+        IF lv_ok = abap_true.
+          COMMIT WORK.
+        ENDIF.
+
+      CATCH cx_bcs INTO DATA(lx_e).
+        DATA(lv_e_text) = lx_e->get_text( ).
+        MESSAGE e010(zspool_pdf) INTO DATA(lv_message) WITH lv_e_text.
+
+        RAISE EXCEPTION TYPE zcx_spdf_exception
+          EXPORTING
+            textid = VALUE #( msgid = 'ZSPOOL_PDF'
+                              msgno = 010
+                              attr1 = lv_e_text ).
+    ENDTRY.
+
+    ro_spdf_pdf = me.
   ENDMETHOD.
 
 

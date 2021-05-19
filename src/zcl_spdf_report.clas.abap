@@ -37,14 +37,6 @@ CLASS zcl_spdf_report DEFINITION
       RAISING
         cx_rspo_spoolid_to_pdf
         zcx_spdf_exception .
-    METHODS get_parts_pdf
-      IMPORTING
-        !iv_rqdoctype        TYPE rspodoctyp DEFAULT 'ADSP'
-        !iv_wait_seconds_max TYPE i DEFAULT 60
-      RETURNING
-        VALUE(ro_parts_pdf)  TYPE REF TO zcl_spdf_parts_pdf
-      RAISING
-        zcx_spdf_exception .
     METHODS bp_job_delete
       IMPORTING
         !iv_forcedmode TYPE sy-batch DEFAULT space
@@ -58,6 +50,7 @@ CLASS zcl_spdf_report DEFINITION
     DATA mt_rsparams TYPE rsparams_tt .
     DATA ms_job_params TYPE tbtcjob .
     DATA mo_params_map TYPE REF TO cl_object_map .
+    DATA mo_merged_pdf TYPE REF TO zcl_spdf_merged_pdf .
 
     METHODS check_report_exists
       IMPORTING
@@ -300,20 +293,19 @@ CLASS ZCL_SPDF_REPORT IMPLEMENTATION.
     DATA: lv_pdf  TYPE xstring,
           lv_size TYPE i.
 
-    DATA(lv_spool_id) = get_spool_id( iv_rqdoctype = iv_rqdoctype
-                                      iv_wait_seconds_max = iv_wait_seconds_max ).
+    IF mo_merged_pdf IS NOT BOUND.
+      DATA(lv_spool_id) = get_spool_id( iv_rqdoctype = iv_rqdoctype
+                                        iv_wait_seconds_max = iv_wait_seconds_max ).
 
-    cl_rspo_spoolid_to_pdf=>get_spool_pdf( EXPORTING iv_rqident = lv_spool_id
-                                           IMPORTING ev_pdf = lv_pdf
-                                                     ev_size = lv_size ).
-    ro_merged_pdf = NEW #( iv_pdf  = lv_pdf
-                           iv_size = lv_size ).
-  ENDMETHOD.
+      cl_rspo_spoolid_to_pdf=>get_spool_pdf( EXPORTING iv_rqident = lv_spool_id
+                                             IMPORTING ev_pdf = lv_pdf
+                                                       ev_size = lv_size ).
+      mo_merged_pdf = NEW #( iv_pdf  = lv_pdf
+                             iv_size = lv_size ).
+    ENDIF.
 
+    ro_merged_pdf = mo_merged_pdf.
 
-  METHOD get_parts_pdf.
-    ro_parts_pdf = NEW #( read_parts_pdf( get_spool_id( iv_rqdoctype = iv_rqdoctype
-                                                        iv_wait_seconds_max = iv_wait_seconds_max ) ) ).
   ENDMETHOD.
 
 

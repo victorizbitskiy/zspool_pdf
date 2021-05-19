@@ -50,6 +50,24 @@
      <MSGNR>007</MSGNR>
      <TEXT>An error occurred while saving the file on the application server &amp;1.</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>The file extension must be .pdf</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>The &amp;1 folder does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZSPOOL_PDF</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>&amp;1</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

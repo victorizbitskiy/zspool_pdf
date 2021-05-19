@@ -25,6 +25,9 @@ CLASS lcl_app IMPLEMENTATION.
 
         DATA(lv_pdf) = lo_report->submit_to_sap_spool( )->get_merged_pdf( )->to_xstring( ).
         lo_report->get_merged_pdf( )->save_local( lv_filename )->show( ).
+        lo_report->get_merged_pdf( )->send( iv_email    = 'test@test.com'
+                                            iv_filename = lv_filename
+                                            iv_subject  = 'This is an email with a PDF attachment' ).
         lo_report->bp_job_delete( ).
 
       CATCH zcx_spdf_exception
