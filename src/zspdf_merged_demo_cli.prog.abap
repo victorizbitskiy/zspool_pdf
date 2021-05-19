@@ -23,8 +23,14 @@ CLASS lcl_app IMPLEMENTATION.
         lo_report->add_param( iv_name = 'P_YEAR'
                               ia_data = lv_year ).
 
+*       Cases:
+*       1) Getting xstring
         DATA(lv_pdf) = lo_report->submit_to_sap_spool( )->get_merged_pdf( )->to_xstring( ).
+
+*       2) Save and show PDF
         lo_report->get_merged_pdf( )->save_local( lv_filename )->show( ).
+
+*       3) Send email
         lo_report->get_merged_pdf( )->send( iv_email    = 'test@test.com'
                                             iv_filename = lv_filename
                                             iv_subject  = 'This is an email with a PDF attachment' ).
