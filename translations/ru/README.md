@@ -52,8 +52,8 @@
    TYPES ty_pernr TYPE n LENGTH 8.
     DATA lt_pernr TYPE RANGE OF ty_pernr.
 
-*   Пример генерации справки 2-НДФЛ (HCM модуль).
-*   Все файлы PDF будут объединены в один
+*   This is an example of generating a 2-NDFL certificate (HCM module).
+*   All PDF documents will be merged into one.
 
     DATA(lv_year) = '2021'.
     lt_pernr = VALUE #( sign = 'I' option = 'EQ' ( low = 00000001 ) ).
@@ -75,6 +75,11 @@
         
 *       2) Save and show PDF
         lo_report->get_merged_pdf( )->save_local( lv_filename )->show( ).
+   
+*       3) Send email
+        lo_report->get_merged_pdf( )->send( iv_email    = 'test@test.com'
+                                            iv_filename = lv_filename
+                                            iv_subject  = 'This is an email with a PDF attachment' ).
         lo_report->bp_job_delete( ).
 
       CATCH zcx_spdf_exception
