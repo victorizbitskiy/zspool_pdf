@@ -1,51 +1,51 @@
-class ZCL_SPDF_MERGED_PDF definition
-  public
-  final
-  create public .
+CLASS zcl_spdf_merged_pdf DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods CONSTRUCTOR
-    importing
-      !IV_PDF type XSTRING
-      !IV_SIZE type I optional .
-  methods SAVE_LOCAL
-    importing
-      !IV_FILENAME type STRING
-      !IV_CODEPAGE type ABAP_ENCODING default SPACE
-    returning
-      value(RO_SPDF_MERGED_PDF) type ref to ZCL_SPDF_MERGED_PDF
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods SAVE_IN_APPL_SERVER
-    importing
-      !IV_FILENAME type STRING
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_SIZE
-    returning
-      value(RV_SIZE) type I .
-  methods TO_XSTRING
-    returning
-      value(RV_PDF) type XSTRING .
-  methods TO_BINARY
-    returning
-      value(RT_BIN) type SOLIX_TAB .
-  methods SHOW
-    importing
-      !IV_FILENAME type STRING optional
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods SEND
-    importing
-      !IV_EMAIL type AD_SMTPADR
-      !IV_FILENAME type STRING
-      !IV_SUBJECT type SO_OBJ_DES
-      !IT_BODY_TEXT type SOLI_TAB optional
-    returning
-      value(RO_SPDF_PDF) type ref to ZCL_SPDF_MERGED_PDF
-    raising
-      ZCX_SPDF_EXCEPTION .
+    METHODS constructor
+      IMPORTING
+        !iv_pdf  TYPE xstring
+        !iv_size TYPE i OPTIONAL .
+    METHODS save_local
+      IMPORTING
+        !iv_filename              TYPE string
+        !iv_codepage              TYPE abap_encoding DEFAULT space
+      RETURNING
+        VALUE(ro_spdf_merged_pdf) TYPE REF TO zcl_spdf_merged_pdf
+      RAISING
+        zcx_spdf_exception .
+    METHODS save_in_appl_server
+      IMPORTING
+        !iv_filename TYPE string
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_size
+      RETURNING
+        VALUE(rv_size) TYPE i .
+    METHODS to_xstring
+      RETURNING
+        VALUE(rv_pdf) TYPE xstring .
+    METHODS to_binary
+      RETURNING
+        VALUE(rt_bin) TYPE solix_tab .
+    METHODS show
+      IMPORTING
+        !iv_filename TYPE string OPTIONAL
+      RAISING
+        zcx_spdf_exception .
+    METHODS send
+      IMPORTING
+        !iv_email          TYPE ad_smtpadr
+        !iv_filename       TYPE string
+        !iv_subject        TYPE so_obj_des
+        !it_body_text      TYPE soli_tab OPTIONAL
+      RETURNING
+        VALUE(ro_spdf_pdf) TYPE REF TO zcl_spdf_merged_pdf
+      RAISING
+        zcx_spdf_exception .
   PROTECTED SECTION.
     METHODS check_filename
       RAISING
