@@ -44,42 +44,42 @@ CLASS zcl_spdf_report DEFINITION
       RAISING
         zcx_spdf_exception .
   PROTECTED SECTION.
-private section.
+  PRIVATE SECTION.
 
-  data MT_INITIAL_RSPARAMS type RSPARAMS_TT .
-  data MT_RSPARAMS type RSPARAMS_TT .
-  data MS_JOB_PARAMS type TBTCJOB .
-  data MO_PARAMS_MAP type ref to CL_OBJECT_MAP .
-  data MO_MERGED_PDF type ref to ZCL_SPDF_MERGED_PDF .
+    DATA mt_initial_rsparams TYPE rsparams_tt .
+    DATA mt_rsparams TYPE rsparams_tt .
+    DATA ms_job_params TYPE tbtcjob .
+    DATA mo_params_map TYPE REF TO cl_object_map .
+    DATA mo_merged_pdf TYPE REF TO zcl_spdf_merged_pdf .
 
-  methods CHECK_REPORT_EXISTS
-    importing
-      !IV_NAME type PROGNAME
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods CHECK_VARIANT_EXISTS
-    importing
-      !IV_NAME type PROGNAME
-      !IV_VARIANT type VARIANT default SPACE
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods FILL_RSPARAMS .
-  methods SUBMIT_WITH_RSPARAMS
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods GET_SPOOL_ID
-    importing
-      !IV_RQDOCTYPE type RSPODOCTYP
-      !IV_WAIT_SECONDS_MAX type I optional
-    returning
-      value(RV_SPOOL_ID) type RSPOID
-    raising
-      ZCX_SPDF_EXCEPTION .
-  methods READ_SPOOL_ID
-    importing
-      !IV_RQDOCTYPE type RSPODOCTYP
-    returning
-      value(RV_SPOOL_ID) type RSPOID .
+    METHODS check_report_exists
+      IMPORTING
+        !iv_name TYPE progname
+      RAISING
+        zcx_spdf_exception .
+    METHODS check_variant_exists
+      IMPORTING
+        !iv_name    TYPE progname
+        !iv_variant TYPE variant DEFAULT space
+      RAISING
+        zcx_spdf_exception .
+    METHODS fill_rsparams .
+    METHODS submit_with_rsparams
+      RAISING
+        zcx_spdf_exception .
+    METHODS get_spool_id
+      IMPORTING
+        !iv_rqdoctype        TYPE rspodoctyp
+        !iv_wait_seconds_max TYPE i OPTIONAL
+      RETURNING
+        VALUE(rv_spool_id)   TYPE rspoid
+      RAISING
+        zcx_spdf_exception .
+    METHODS read_spool_id
+      IMPORTING
+        !iv_rqdoctype      TYPE rspodoctyp
+      RETURNING
+        VALUE(rv_spool_id) TYPE rspoid .
 ENDCLASS.
 
 
