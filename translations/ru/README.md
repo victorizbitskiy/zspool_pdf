@@ -79,8 +79,6 @@
         lo_report->get_merged_pdf( )->send( iv_email    = 'test@test.com'
                                             iv_filename = lv_filename
                                             iv_subject  = 'This is an email with a PDF attachment' ).
-        lo_report->bp_job_delete( ).
-
       CATCH zcx_spdf_exception
             cx_rspo_spoolid_to_pdf INTO DATA(lx_e).
         WRITE lx_e->get_text( ).
