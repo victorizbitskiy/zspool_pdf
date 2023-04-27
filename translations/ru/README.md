@@ -4,8 +4,6 @@
 ![ABAP 7.40sp08+](https://img.shields.io/badge/ABAP-7.40sp08+-brightgreen)
 [![Code Statistics](https://img.shields.io/badge/CodeStatistics-abaplint-blue)](https://abaplint.app/stats/victorizbitskiy/zspool_pdf)
 
-**ВНИМАНИЕ**: Проект все еще разрабатывается и может изменяться
-
 Переводы:
 - [:uk: In English](https://github.com/victorizbitskiy/zspool_pdf) 
 
