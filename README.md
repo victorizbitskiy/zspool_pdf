@@ -51,8 +51,8 @@ Install the package using [abapGit](http://www.abapgit.org). Just clone the repo
    TYPES ty_pernr TYPE n LENGTH 8.
     DATA lt_pernr TYPE RANGE OF ty_pernr.
 
-    " This is an example of generating a 2-NDFL certificate (HCM module).
-    " All PDF documents will be merged into one.
+   " This example demonstrates how to generate 2-NDFL certificates (HCM module).
+   " All individual PDF documents are automatically merged into a single file.
 
     DATA(lv_year) = '2021'.
     lt_pernr = VALUE #( sign = 'I' option = 'EQ' ( low = 00000001 ) ).
