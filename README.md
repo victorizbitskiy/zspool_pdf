@@ -11,6 +11,12 @@ Translations:
 
 Submitting a report to the spool and receiving PDF.
 
+---
+
+<p align="left">Don't forget to click ⭐ if you like it!<p>
+
+---
+
 # Table of contents
 1. [What is it?](#what-is-it)
 2. [What is this for?](#what-is-this-for)
