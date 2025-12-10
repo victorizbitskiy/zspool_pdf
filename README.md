@@ -12,33 +12,34 @@ Translations:
 Submitting a report to the spool and receiving PDF.
 
 # Table of contents
-1. [What it is?](#what-it-is)
+1. [What is it?](#what-is-it)
 2. [What is this for?](#what-is-this-for)
-3. [Installation](#installation)
-4. [Using](#using)
-5. [Diagrams](#diagrams)
-6. [How to contribute](#how-to-contribute)
-7. [Got questions](#Got-questions)
-8. [Logo](#logo)
+3. [Why not just use cl_bp_abap_job?](#why-not-just-use-cl_bp_abap_job?)
+4. [Installation](#installation)
+5. [Using](#using)
+6. [Diagrams](#diagrams)
+7. [How to contribute](#how-to-contribute)
+8. [Got questions](#Got-questions)
+9. [Logo](#logo)
 
-## What it is?
-
-`SAP Spool PDF` is a few classes to help you submit a report to spool and get PDF file easily.
+## What is it?
+`SAP Spool PDF` is a lightweight ABAP utility that simplifies generating PDFs from SAP reports. It provides a clean, object-oriented interface to submit a report to the spool and retrieve the output as a PDF file without dealing with low-level conversion logic.
 
 ## What is this for?
+Often, you need a report’s output as a PDF in xstring or binary format. One clean and non-intrusive way to achieve this is by submitting the report to the SAP spool (typically in the background) and then converting the spool request into a PDF using its spool ID.
+This approach avoids modifying standard SAP code—making it safer, upgrade-friendly, and easier to maintain.
 
-It is often necessary to get a PDF in *xstring* or *binary* format. To do this, you can send a report to the sap-spool (in the background), and then read PDF by the spool ID. This way of getting the file is more preferable, because there is no need to do the enhancement in standard code.
+## Why not just use cl_bp_abap_job?
+SAP’s standard class **cl_bp_abap_job** can run reports in the background—but it only supports passing parameters via a variant. (Let me know if that’s changed!)
+While variants work, they’re not always convenient: you either have to predefine one or create it dynamically at runtime, which adds complexity and overhead.
 
-The **cl_bp_abap_job** class exists in ABAP to run reports in the background. But this class only supports passing report parameters via variant (let me know if I'm wrong).
-This is not always convenient, since a variant must either be created before the report is run, or it must be created at runtime.  
+`SAP Spool PDF` gives you more flexibility. It lets you run any report in the background and generate a PDF from its output passing parameters directly, via a variant, or even both.
 
-`SAP Spool PDF` allows you to run any report generating PDF in the background. Report parameters can be passed directly and/or via a variant.  
-
-The laconic API allows you to literally get a file in the form of *xstring* in one line, save, show, or send it.
+Thanks to its minimal and intuitive API, you can get the resulting PDF as an xstring in a single line ready to save, display, email, or process further.
 
 ## Installation
 
-Installation is done with [abapGit](http://www.abapgit.org).
+Install the package using [abapGit](http://www.abapgit.org). Just clone the repository into your SAP system, and you’re ready to go!
 
 ## Using
 
@@ -92,10 +93,11 @@ Installation is done with [abapGit](http://www.abapgit.org).
 </details>
 
 ## How to contribute
-[This instruction](https://docs.abapgit.org/guide-contributing.html) will help you.
+ will help you.
+Contributions are welcome! Please follow the [official contribution guide](https://docs.abapgit.org/guide-contributing.html) from abapGit to get started.
   
 ## Got questions?
-If you have questions or general suggestions, don't hesitate to submit a new [(GitHub issue)](https://github.com/victorizbitskiy/zspool_pdf/issues/new).
+If you have any questions, feature ideas, or just want to share feedback - feel free to open a new [(GitHub issue)](https://github.com/victorizbitskiy/zspool_pdf/issues/new).
   
 ## Logo
 Project logo <a href="https://www.flaticon.com/ru/authors/pixel-buddha">designed by pixel-buddha</a>
